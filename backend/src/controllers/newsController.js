@@ -1,5 +1,6 @@
 const News = require('../models/News');
 const { softDelete, restore } = require('../utils/softDelete');
+const jwt = require('jsonwebtoken');
 const { logActivity } = require('../utils/logger');
 const { generateSEO } = require('../utils/seoUtils');
 
@@ -8,7 +9,16 @@ const getNews = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 12;
 
-        const query = req.header('Authorization') ? { isDeleted: false } : { status: 'published', isDeleted: false };
+        let query = { status: 'published', isDeleted: false };
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+        if (token) {
+            try {
+                jwt.verify(token, process.env.JWT_SECRET);
+                query = { isDeleted: false };
+            } catch (err) {
+                // Invalid token, fallback to published only
+            }
+        }
 
         const news = await News.find(query)
             .sort({ createdAt: -1 })
@@ -26,8 +36,21 @@ const getNewsBySlug = async (req, res) => {
     try {
         const article = await News.findOne({ slug: req.params.slug, isDeleted: false });
         if (!article) return res.status(404).json({ error: 'Article not found' });
-        if (article.status === 'draft' && !req.header('Authorization')) {
-            return res.status(403).json({ error: 'Forbidden' });
+
+        if (article.status === 'draft') {
+            const token = req.header('Authorization')?.replace('Bearer ', '');
+            let isAuthorized = false;
+            if (token) {
+                try {
+                    jwt.verify(token, process.env.JWT_SECRET);
+                    isAuthorized = true;
+                } catch (err) {
+                    // Invalid token
+                }
+            }
+            if (!isAuthorized) {
+                return res.status(403).json({ error: 'Forbidden' });
+            }
         }
         res.json(article);
     } catch (error) {

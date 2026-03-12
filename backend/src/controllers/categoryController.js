@@ -13,7 +13,8 @@ const getCategories = async (req, res) => {
 
 const createCategory = async (req, res) => {
     try {
-        const category = new Category(req.body);
+        const { name, slug, description } = req.body;
+        const category = new Category({ name, slug, description });
         await category.save();
         await logActivity(req, 'CREATE', 'Category', category._id, { name: category.name });
         res.status(201).json(category);
@@ -24,9 +25,10 @@ const createCategory = async (req, res) => {
 
 const updateCategory = async (req, res) => {
     try {
-        const category = await Category.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const { name, slug, description } = req.body;
+        const category = await Category.findByIdAndUpdate(req.params.id, { name, slug, description }, { new: true });
         if (category) {
-            await logActivity(req, 'UPDATE', 'Category', category._id, req.body);
+            await logActivity(req, 'UPDATE', 'Category', category._id, { name, slug, description });
         }
         res.json(category);
     } catch (error) {

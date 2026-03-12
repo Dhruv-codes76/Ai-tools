@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import xss from "xss";
 
 async function getArticle(slug: string) {
     const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/news/${slug}`;
@@ -106,7 +107,7 @@ export default async function SingleNewsPage({ params }: { params: { slug: strin
 
                 <div 
                     className="prose prose-lg dark:prose-invert max-w-none mb-16 font-sans text-muted-foreground leading-loose"
-                    dangerouslySetInnerHTML={{ __html: article.content }}
+                    dangerouslySetInnerHTML={{ __html: xss(article.content) }}
                 />
 
                 {article.sourceLink && (

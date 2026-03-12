@@ -13,6 +13,7 @@ app.use(cors());
 const adminRoutes = require('./routes/adminRoutes');
 const newsRoutes = require('./routes/newsRoutes');
 const toolRoutes = require('./routes/toolRoutes');
+const searchRoutes = require('./routes/searchRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const activityLogRoutes = require('./routes/activityLogRoutes');
 const searchRoutes = require('./routes/searchRoutes');

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import xss from "xss";
 
 async function getTool(slug: string) {
     const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/tools/${slug}`;
@@ -100,7 +101,7 @@ export default async function SingleToolPage({ params }: { params: { slug: strin
 
                 <div 
                     className="prose prose-lg dark:prose-invert max-w-none mb-16 font-sans text-muted-foreground leading-loose"
-                    dangerouslySetInnerHTML={{ __html: tool.description }}
+                    dangerouslySetInnerHTML={{ __html: xss(tool.description) }}
                 />
 
                 {tool.website && (
