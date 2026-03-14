@@ -25,10 +25,18 @@ export default function AdminLoginPage() {
                 body: JSON.stringify({ email, password }),
             });
 
-            const data = await res.json();
+            const contentType = res.headers.get("content-type");
+            let data;
+            if (contentType && contentType.includes("application/json")) {
+                data = await res.json();
+            } else {
+                const text = await res.text();
+                console.error("Non-JSON API Response:", text);
+                throw new Error("Invalid response from server. Check if API URL is configured correctly.");
+            }
 
             if (!res.ok) {
-                throw new Error(data.error || "Login failed");
+                throw new Error(data?.error || `Login failed (Status: ${res.status})`);
             }
 
             // Store token securely
@@ -39,7 +47,8 @@ export default function AdminLoginPage() {
             router.refresh();
 
         } catch (err: any) {
-            setError(err.message);
+            console.error("Login Error:", err);
+            setError(err.message || "An unexpected error occurred");
         } finally {
             setLoading(false);
         }
