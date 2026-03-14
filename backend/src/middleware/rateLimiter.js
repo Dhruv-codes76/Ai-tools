@@ -1,5 +1,5 @@
 const rateLimit = require('express-rate-limit');
-const AppError = require('./AppError');
+const AppError = require('../utils/AppError');
 
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
