@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Image as ImageIcon } from "lucide-react";
 
 interface NewsItem {
     _id: string;
@@ -6,6 +7,7 @@ interface NewsItem {
     slug: string;
     summary: string;
     createdAt: string;
+    image_url?: string;
 }
 
 export default function NewsCard({ news }: { news: NewsItem }) {
@@ -16,20 +18,36 @@ export default function NewsCard({ news }: { news: NewsItem }) {
     });
 
     return (
-        <article className="group border-b border-border py-8 first:pt-0 last:border-0 transition-colors hover:bg-muted/10">
-            <Link href={`/news/${news.slug}`} className="block h-full">
-                <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-3">
-                    <h3 className="font-sans text-2xl font-bold text-foreground group-hover:underline decoration-1 underline-offset-4 mb-2 md:mb-0 md:mr-6 line-clamp-2 md:line-clamp-none">
-                        {news.title}
-                    </h3>
-                    <time className="text-xs tracking-wide text-muted-foreground whitespace-nowrap uppercase font-medium mt-1 md:mt-0">
-                        {date}
-                    </time>
+        <article className="group flex flex-col h-full bg-card rounded-xl border border-border shadow-sm overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+            <Link href={`/news/${news.slug}`} className="flex flex-col h-full">
+                {/* Image Placeholder Container (16:9) */}
+                <div className="relative w-full pt-[56.25%] bg-muted flex items-center justify-center">
+                    {news.image_url ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                            src={news.image_url}
+                            alt={news.title}
+                            className="absolute top-0 left-0 w-full h-full object-cover"
+                        />
+                    ) : (
+                        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/50">
+                            <ImageIcon className="w-12 h-12" />
+                        </div>
+                    )}
                 </div>
 
-                <p className="text-muted-foreground leading-relaxed line-clamp-3 md:line-clamp-2 max-w-4xl">
-                    {news.summary}
-                </p>
+                {/* Content Container */}
+                <div className="flex flex-col flex-grow p-6">
+                    <time className="text-xs tracking-wider text-muted-foreground uppercase font-medium mb-3">
+                        {date}
+                    </time>
+                    <h3 className="font-sans text-xl md:text-2xl font-bold text-card-foreground leading-tight mb-4 group-hover:text-primary transition-colors line-clamp-2">
+                        {news.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3 mt-auto">
+                        {news.summary}
+                    </p>
+                </div>
             </Link>
         </article>
     );
