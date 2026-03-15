@@ -24,11 +24,24 @@
 
     --border: #E5E5E5;
   }
+
+  .dark {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+
+    --card: #171717;
+    --card-foreground: #ededed;
+
+    --muted: #262626;
+    --muted-foreground: #a3a3a3;
+
+    --border: #262626;
+  }
 }
 
 @layer base {
   body {
-    @apply bg-background text-foreground antialiased selection:bg-foreground selection:text-background;
+    @apply bg-background text-foreground antialiased selection:bg-foreground selection:text-background transition-colors duration-300;
   }
 
   h1,
