@@ -40,18 +40,21 @@
 }
 
 @layer base {
+  /* Global CSS transition for seamless theme switching */
+  *, *::before, *::after {
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 350ms;
+  }
+
   body {
     @apply bg-background text-foreground antialiased selection:bg-foreground selection:text-background;
-    /* Removed transition-colors duration-300 from here so we can handle custom gradient transitions */
     min-height: 100vh;
   }
 
   /* YT Music style subtle gradient background for dark mode */
-  .dark body {
-    background: #030303;
-  }
-
-  .dark body::before {
+  /* Added smooth opacity transition so it doesn't abruptly appear */
+  body::before {
     content: '';
     position: fixed;
     top: 0;
@@ -61,6 +64,12 @@
     background: radial-gradient(ellipse at 50% 0%, #2b1738 0%, #030303 60%);
     z-index: -1;
     pointer-events: none;
+    opacity: 0;
+    transition: opacity 400ms ease-in-out;
+  }
+
+  .dark body::before {
+    opacity: 1;
   }
 
   h1,
@@ -88,23 +97,4 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* View transition styles for smooth gradient-like reveal */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-::view-transition-old(root) {
-  z-index: 1;
-}
-::view-transition-new(root) {
-  z-index: 2;
-}
-.dark::view-transition-old(root) {
-  z-index: 2;
-}
-.dark::view-transition-new(root) {
-  z-index: 1;
 }

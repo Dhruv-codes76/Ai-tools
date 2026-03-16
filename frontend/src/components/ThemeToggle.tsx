@@ -9,8 +9,8 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
+
     setMounted(true);
   }, []);
 
@@ -25,70 +25,34 @@ export function ThemeToggle() {
   const isDark = resolvedTheme === "dark";
 
   const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // Add micro-interaction: subtle instant scale down on click
+    const button = e.currentTarget;
+    button.style.transform = "scale(0.85)";
+    setTimeout(() => {
+      button.style.transform = "";
+    }, 150);
+
     const nextTheme = isDark ? "light" : "dark";
-
-    if (
-      !document.startViewTransition ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      setTheme(nextTheme);
-      return;
-    }
-
-    // Get click position for the center of the radial gradient transition
-    const x = e.clientX;
-    const y = e.clientY;
-    const endRadius = Math.hypot(
-      Math.max(x, innerWidth - x),
-      Math.max(y, innerHeight - y)
-    );
-
-    document.documentElement.style.setProperty("--x", `${x}px`);
-    document.documentElement.style.setProperty("--y", `${y}px`);
-    document.documentElement.style.setProperty("--r", `${endRadius}px`);
-
-    const transition = document.startViewTransition(() => {
-      // Must use flushSync inside view transition sometimes, but React handles state updates reasonably well here
-      setTheme(nextTheme);
-    });
-
-    transition.ready.then(() => {
-      const clipPath = [
-        `circle(0px at ${x}px ${y}px)`,
-        `circle(${endRadius}px at ${x}px ${y}px)`,
-      ];
-
-      document.documentElement.animate(
-        {
-          clipPath: isDark ? clipPath.reverse() : clipPath,
-        },
-        {
-          // Giving the transition more soul - slightly longer, custom cubic-bezier
-          duration: 900,
-          easing: "cubic-bezier(0.8, 0, 0.2, 1)",
-          pseudoElement: isDark
-            ? "::view-transition-old(root)"
-            : "::view-transition-new(root)",
-        }
-      );
-    });
+    // Using instant Next Themes switch instead of View Transitions for a snappier feel
+    // Smooth global crossfade is now handled natively via CSS transitions in globals.css
+    setTheme(nextTheme);
   };
 
   return (
     <button
       onClick={toggleTheme}
-      className="relative flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-900 shadow-sm transition-all hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 hover:scale-105 active:scale-95"
+      className="relative flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-900 shadow-sm transition-all duration-300 ease-out hover:bg-slate-200 hover:scale-105 active:scale-95 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
       aria-label="Toggle theme"
     >
       {isDark ? (
         <>
           <Moon className="h-[22px] w-[22px] text-blue-400 transition-transform duration-500 hover:rotate-[360deg]" />
-          <div className="absolute inset-0 rounded-full bg-blue-400/10 blur-md"></div>
+          <div className="absolute inset-0 rounded-full bg-blue-400/10 blur-md transition-opacity duration-300"></div>
         </>
       ) : (
         <>
           <Sun className="h-[22px] w-[22px] text-amber-500 transition-transform duration-500 hover:rotate-90" />
-          <div className="absolute inset-0 rounded-full bg-amber-400/20 blur-md"></div>
+          <div className="absolute inset-0 rounded-full bg-amber-400/20 blur-md transition-opacity duration-300"></div>
         </>
       )}
     </button>

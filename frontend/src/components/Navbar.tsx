@@ -3,9 +3,46 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
+import { useEffect, useState, useRef } from "react";
 
 export default function Navbar() {
     const pathname = usePathname();
+    const [isVisible, setIsVisible] = useState(true);
+    const lastScrollY = useRef(0);
+
+    useEffect(() => {
+        let ticking = false;
+
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    // Only trigger hiding if we've scrolled down a reasonable amount
+                    if (currentScrollY > 50) {
+                        // Scrolling down
+                        if (currentScrollY > lastScrollY.current) {
+                            setIsVisible(false);
+                        }
+                        // Scrolling up
+                        else {
+                            setIsVisible(true);
+                        }
+                    } else {
+                        // Always visible at the top
+                        setIsVisible(true);
+                    }
+
+                    lastScrollY.current = currentScrollY;
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     const navLinks = [
         { name: "Home", href: "/" },
@@ -14,7 +51,11 @@ export default function Navbar() {
     ];
 
     return (
-        <nav className="sticky top-0 backdrop-blur-md bg-background/80 inset-x-0 z-50 border-b border-border">
+        <nav
+            className={`sticky top-0 backdrop-blur-md bg-background/80 inset-x-0 z-50 border-b border-border transition-transform duration-300 ease-in-out ${
+                isVisible ? "translate-y-0" : "-translate-y-full"
+            }`}
+        >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-20">
                     {/* Logo */}
