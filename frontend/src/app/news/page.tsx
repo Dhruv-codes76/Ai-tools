@@ -19,9 +19,15 @@ export default async function NewsPage() {
             />
 
             {newsItems && newsItems.length > 0 ? (
-                <div className="flex flex-col">
-                    {newsItems.map((item: any) => (
-                        <NewsCard key={item._id} news={item} />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {newsItems.map((item: any, index: number) => (
+                        <div
+                            key={item._id}
+                            className="animate-fade-in"
+                            style={{ animationDelay: `${index * 50}ms`, opacity: 0, animationFillMode: 'forwards' }}
+                        >
+                            <NewsCard news={{...item, trending: index < 2}} />
+                        </div>
                     ))}
                 </div>
             ) : (
