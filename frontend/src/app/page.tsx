@@ -25,16 +25,16 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg">
+        <div className="flex flex-row justify-start gap-4 w-full max-w-lg">
           <Link
             href="/news"
-            className="px-8 py-4 bg-foreground text-background font-medium text-center uppercase tracking-widest text-sm hover:bg-background hover:text-foreground border border-foreground transition-colors"
+            className="flex flex-1 items-center justify-center px-4 sm:px-8 py-4 sm:py-5 rounded-2xl bg-gradient-to-r from-foreground to-foreground/90 text-background font-medium text-center uppercase tracking-widest text-xs sm:text-sm shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:scale-105 active:scale-95 border border-transparent dark:border-white/10"
           >
             Read Intelligence
           </Link>
           <Link
             href="/tools"
-            className="px-8 py-4 bg-background text-foreground font-medium text-center uppercase tracking-widest text-sm border border-border hover:border-foreground transition-colors"
+            className="flex flex-1 items-center justify-center px-4 sm:px-8 py-4 sm:py-5 rounded-2xl bg-background/50 backdrop-blur-md text-foreground font-medium text-center uppercase tracking-widest text-xs sm:text-sm border border-border shadow-sm transition-all duration-300 hover:bg-muted/50 hover:shadow-md hover:-translate-y-1 hover:scale-105 active:scale-95"
           >
             Explore Tools
           </Link>
