@@ -6,7 +6,7 @@ import ToolCard from "@/components/ToolCard";
 import { getNews, getTools } from "@/lib/api";
 
 export default async function Home() {
-  const { data: latestNews } = await getNews(1, 3);
+  const { data: latestNews } = await getNews(1, 6);
   const { data: latestTools } = await getTools(1, 4);
 
   return (

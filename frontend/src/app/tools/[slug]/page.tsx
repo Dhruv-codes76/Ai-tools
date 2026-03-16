@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getToolBySlug } from "@/lib/api";
 import BackLink from "@/components/BackLink";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-    const tool = await getToolBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+    const slug = (await params).slug;
+    const tool = await getToolBySlug(slug);
     if (!tool) return { title: 'Not Found' };
 
     const title = tool.seoMetaTitle || tool.name;
@@ -33,8 +33,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
 }
 
-export default async function SingleToolPage({ params }: { params: { slug: string } }) {
-    const tool = await getToolBySlug(params.slug);
+export default async function SingleToolPage({ params }: { params: Promise<{ slug: string }> }) {
+    const slug = (await params).slug;
+    const tool = await getToolBySlug(slug);
 
     if (!tool) {
         notFound();

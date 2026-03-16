@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getNewsBySlug } from "@/lib/api";
 import BackLink from "@/components/BackLink";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-    const article = await getNewsBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+    const slug = (await params).slug;
+    const article = await getNewsBySlug(slug);
     if (!article) return { title: 'Not Found' };
 
     const title = article.seoMetaTitle || article.title;
@@ -34,8 +34,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
 }
 
-export default async function SingleNewsPage({ params }: { params: { slug: string } }) {
-    const article = await getNewsBySlug(params.slug);
+export default async function SingleNewsPage({ params }: { params: Promise<{ slug: string }> }) {
+    const slug = (await params).slug;
+    const article = await getNewsBySlug(slug);
 
     if (!article) {
         notFound();
