@@ -29,7 +29,7 @@ export default function RootLayout({
         >
           <ThemeRegistry>
             <Navbar />
-            <main className="flex-grow pt-20">
+            <main className="flex-grow">
               {children}
             </main>
             <Footer />
