@@ -59,13 +59,9 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-20">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center group gap-3">
-                        {/* Vector Logo representation */}
-                        <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center transform transition-transform group-hover:rotate-12 group-hover:scale-110 shadow-[0_0_15px_rgba(0,191,255,0.4)]">
-                            <span className="text-white font-heading font-black text-xl tracking-tighter">AI</span>
-                        </div>
-                        <span className="font-heading font-bold text-xl lg:text-2xl tracking-tight text-foreground transition-colors group-hover:text-primary">
-                            Portal Weekly
+                    <Link href="/" className="flex items-center group">
+                        <span className="font-sans font-bold text-2xl lg:text-3xl tracking-tight text-foreground transition-transform duration-300 group-hover:scale-[1.02]">
+                            AI Portal Weekly
                         </span>
                     </Link>
 
@@ -77,12 +73,12 @@ export default function Navbar() {
                                 <Link
                                     key={link.name}
                                     href={link.href}
-                                    className={`text-sm tracking-wide transition-all duration-300 relative group py-2 font-semibold ${isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
+                                    className={`text-sm tracking-wide transition-all duration-300 relative group py-2 font-semibold ${isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                                         }`}
                                 >
                                     {link.name}
                                     {/* Minimal underline hover effect typical of editorial design */}
-                                    <span className={`absolute left-0 bottom-0 h-[2px] rounded-full transition-all duration-300 ${isActive ? 'bg-primary w-full' : 'bg-primary w-0 group-hover:w-full'
+                                    <span className={`absolute left-0 bottom-0 h-[2px] rounded-full transition-all duration-300 ${isActive ? 'bg-foreground w-full' : 'bg-foreground w-0 group-hover:w-full'
                                         }`}></span>
                                 </Link>
                             );
@@ -92,6 +88,12 @@ export default function Navbar() {
                     {/* Actions */}
                     <div className="flex items-center space-x-6">
                         <ThemeToggle />
+                        <Link
+                            href="/admin/login"
+                            className="text-xs tracking-wider uppercase font-bold text-muted-foreground hover:text-foreground transition-colors hidden sm:block border border-border px-4 py-2 rounded-xl hover:bg-muted/50"
+                        >
+                            Admin
+                        </Link>
                     </div>
                 </div>
             </div>

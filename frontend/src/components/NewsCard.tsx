@@ -1,71 +1,148 @@
-import Link from "next/link";
-import { ArrowRight, Bookmark, Share2, Image as ImageIcon } from "lucide-react";
+"use client";
 
-export default function NewsCard({ news }: { news: any }) {
-    const readTime = Math.ceil(news.content.split(' ').length / 200);
+import Link from "next/link";
+import { Image as ImageIcon, Bookmark, Share2, TrendingUp, Twitter, Linkedin, Link as LinkIcon } from "lucide-react";
+import { useState } from "react";
+
+interface NewsItem {
+    _id: string;
+    title: string;
+    slug: string;
+    summary: string;
+    createdAt: string;
+    image_url?: string;
+    trending?: boolean;
+    category?: string;
+}
+
+export default function NewsCard({ news }: { news: NewsItem }) {
+    const [isSaved, setIsSaved] = useState(false);
+    const [showShareMenu, setShowShareMenu] = useState(false);
+
     const date = new Date(news.createdAt).toLocaleDateString("en-US", {
-        month: "short", day: "numeric",
+        month: "short",
+        day: "numeric",
     });
 
+    // Simple word count to estimate reading time (approx 200 words/min)
+    const readingTime = Math.max(1, Math.ceil((news.summary?.split(' ').length || 0) / 50)) + " min read";
+
+    const handleSave = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsSaved(!isSaved);
+    };
+
+    const handleShareClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setShowShareMenu(!showShareMenu);
+    };
+
+    const handleShareAction = (e: React.MouseEvent, platform: string) => {
+        e.preventDefault();
+        const url = `${typeof window !== 'undefined' ? window.location.origin : ''}/news/${news.slug}`;
+
+        if (platform === 'twitter') {
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(news.title)}&url=${encodeURIComponent(url)}`, '_blank');
+        } else if (platform === 'linkedin') {
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+        } else if (platform === 'copy') {
+            navigator.clipboard.writeText(url);
+            alert("Link copied to clipboard!");
+        }
+        setShowShareMenu(false);
+    };
+
     return (
-        <article className="group flex flex-col h-full bg-card rounded-2xl overflow-hidden border border-border transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1">
-            {/* Image / Fallback Section */}
-            <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted flex items-center justify-center">
-                {news.featuredImage ? (
-                    <img
-                        src={news.featuredImage}
-                        alt={news.featuredImageAlt || news.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        loading="lazy"
-                    />
-                ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-background via-muted to-border flex items-center justify-center">
-                        <ImageIcon className="w-12 h-12 text-muted-foreground/30" />
-                    </div>
-                )}
-
-                {/* Category Badge */}
-                <div className="absolute top-4 left-4 bg-background/80 backdrop-blur-md px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest text-foreground uppercase border border-white/10 shadow-sm">
-                    {news.category || 'AI Intel'}
-                </div>
-            </div>
-
-            {/* Content Section */}
-            <div className="flex flex-col flex-grow p-6 md:p-8">
-                <div className="flex items-center text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-4">
-                    <time>{date}</time>
-                    <span className="mx-2">&bull;</span>
-                    <span>{readTime} MIN READ</span>
-                </div>
-
-                <h3 className="text-xl md:text-2xl font-heading font-bold tracking-tight text-card-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-                    {news.title}
-                </h3>
-
-                <p className="text-muted-foreground text-sm md:text-base line-clamp-3 mb-6 leading-relaxed flex-grow">
-                    {news.summary}
-                </p>
-
-                {/* Footer Actions */}
-                <div className="flex items-center justify-between pt-6 border-t border-border mt-auto">
-                    <div className="flex gap-4">
-                        <button className="text-muted-foreground hover:text-primary transition-colors p-2 hover:bg-primary/5 rounded-full" aria-label="Save article">
-                            <Bookmark className="w-4 h-4" />
-                        </button>
-                        <button className="text-muted-foreground hover:text-primary transition-colors p-2 hover:bg-primary/5 rounded-full" aria-label="Share article">
-                            <Share2 className="w-4 h-4" />
-                        </button>
+        <article className="group flex flex-col h-full bg-card rounded-2xl border border-border shadow-sm overflow-visible transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-foreground/20 relative">
+            <Link href={`/news/${news.slug}`} className="flex flex-col h-full rounded-2xl overflow-hidden">
+                {/* Image Placeholder Container (16:9) with Zoom on Hover */}
+                <div className="relative w-full pt-[56.25%] bg-muted flex items-center justify-center overflow-hidden">
+                    {/* Badges Overlay */}
+                    <div className="absolute top-4 left-4 z-10 flex gap-2">
+                        {news.trending && (
+                            <span className="flex items-center gap-1 bg-red-500/90 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full shadow-sm">
+                                <TrendingUp className="w-3 h-3" /> Trending
+                            </span>
+                        )}
+                        <span className="bg-background/80 backdrop-blur-md text-foreground text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border border-border/50 shadow-sm transition-colors group-hover:bg-background">
+                            {news.category || "AI Intel"}
+                        </span>
                     </div>
 
-                    <Link
-                        href={`/news/${news.slug}`}
-                        className="flex items-center text-sm font-bold tracking-widest uppercase text-primary hover:text-primary/80 transition-colors group/link"
-                    >
-                        Read
-                        <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-300 group-hover/link:translate-x-1" />
-                    </Link>
+                    {news.image_url ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                            src={news.image_url}
+                            alt={news.title}
+                            loading="lazy"
+                            className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                    ) : (
+                        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/30 bg-muted/50 transition-transform duration-700 group-hover:scale-105">
+                            <ImageIcon className="w-10 h-10" />
+                        </div>
+                    )}
                 </div>
-            </div>
+
+                {/* Content Container */}
+                <div className="flex flex-col flex-grow p-6 lg:p-8">
+                    <div className="flex justify-between items-center mb-3">
+                        <time className="text-xs tracking-wider text-muted-foreground uppercase font-semibold">
+                            {date} • {readingTime}
+                        </time>
+                    </div>
+
+                    <h3 className="font-sans text-xl lg:text-2xl font-bold text-card-foreground leading-snug mb-3 group-hover:text-foreground/80 transition-colors line-clamp-2">
+                        {news.title}
+                    </h3>
+
+                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3 mt-auto font-medium mb-6">
+                        {news.summary}
+                    </p>
+
+                    {/* Action Bar */}
+                    <div className="mt-auto pt-4 border-t border-border/50 flex justify-between items-center relative z-20">
+                        <div className="flex items-center space-x-2">
+                            <button
+                                onClick={handleSave}
+                                className={`p-2 rounded-full transition-all duration-200 hover:bg-muted active:scale-95 ${isSaved ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                                aria-label="Save article"
+                            >
+                                <Bookmark className={`w-5 h-5 ${isSaved ? 'fill-current' : ''}`} />
+                            </button>
+
+                            <div className="relative">
+                                <button
+                                    onClick={handleShareClick}
+                                    className="p-2 rounded-full text-muted-foreground transition-all duration-200 hover:bg-muted hover:text-foreground active:scale-95"
+                                    aria-label="Share article"
+                                >
+                                    <Share2 className="w-5 h-5" />
+                                </button>
+
+                                {/* Share Popover */}
+                                {showShareMenu && (
+                                    <div className="absolute bottom-full left-0 mb-2 w-48 bg-card border border-border rounded-xl shadow-lg p-2 flex flex-col gap-1 z-50 animate-fade-in origin-bottom-left">
+                                        <button onClick={(e) => handleShareAction(e, 'twitter')} className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors w-full text-left">
+                                            <Twitter className="w-4 h-4" /> Twitter
+                                        </button>
+                                        <button onClick={(e) => handleShareAction(e, 'linkedin')} className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors w-full text-left">
+                                            <Linkedin className="w-4 h-4" /> LinkedIn
+                                        </button>
+                                        <button onClick={(e) => handleShareAction(e, 'copy')} className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors w-full text-left">
+                                            <LinkIcon className="w-4 h-4" /> Copy Link
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <span className="text-xs font-semibold text-foreground/60 tracking-wider uppercase group-hover:text-foreground transition-colors flex items-center">
+                            Read <span className="ml-1 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">→</span>
+                        </span>
+                    </div>
+                </div>
+            </Link>
         </article>
     );
 }
