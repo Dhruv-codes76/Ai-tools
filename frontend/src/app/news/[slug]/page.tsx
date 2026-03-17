@@ -1,3 +1,4 @@
+import CommentSection from "@/components/CommentSection";
 import { notFound } from "next/navigation";
 import { getNewsBySlug } from "@/lib/api";
 import BackLink from "@/components/BackLink";
@@ -113,6 +114,7 @@ export default async function SingleNewsPage({ params }: { params: Promise<{ slu
                     </footer>
                 )}
             </article>
+            <CommentSection articleId={article._id} />
         </div>
     );
 }

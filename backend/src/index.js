@@ -17,6 +17,7 @@ const toolRoutes = require('./routes/toolRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const activityLogRoutes = require('./routes/activityLogRoutes');
 const searchRoutes = require('./routes/searchRoutes');
+const commentRoutes = require('./routes/commentRoutes');
 
 
 // Use routes
@@ -24,6 +25,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/tools', toolRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api', commentRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/logs', activityLogRoutes);
 
