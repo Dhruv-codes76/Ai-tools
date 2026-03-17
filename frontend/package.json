@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.8",
     "@mui/material": "^7.3.8",
+<<<<<<< HEAD
     "@tiptap/extension-character-count": "^3.20.1",
     "@tiptap/extension-color": "^3.20.1",
     "@tiptap/extension-image": "^3.20.1",
@@ -23,6 +24,18 @@
     "@tiptap/react": "^3.20.1",
     "@tiptap/starter-kit": "^3.20.1",
     "date-fns": "^4.1.0",
+=======
+    "@tiptap/extension-bubble-menu": "^2.27.2",
+    "@tiptap/extension-character-count": "^2.27.2",
+    "@tiptap/extension-color": "^2.27.2",
+    "@tiptap/extension-image": "^2.27.2",
+    "@tiptap/extension-link": "^2.27.2",
+    "@tiptap/extension-placeholder": "^2.27.2",
+    "@tiptap/extension-text-style": "^2.27.2",
+    "@tiptap/extension-underline": "^2.27.2",
+    "@tiptap/react": "^2.27.2",
+    "@tiptap/starter-kit": "^2.27.2",
+>>>>>>> aeb73d8 (ui fixes)
     "lucide-react": "^0.575.0",
     "next": "16.1.6",
     "next-themes": "^0.4.6",
@@ -31,6 +44,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
