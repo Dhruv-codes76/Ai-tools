@@ -1,49 +1,64 @@
 import Link from "next/link";
-import { Wrench } from "lucide-react";
+import { ArrowRight, Star, ExternalLink, Image as ImageIcon } from "lucide-react";
 
-interface Category {
-    _id: string;
-    name: string;
-    slug: string;
-}
-
-interface ToolItem {
-    _id: string;
-    name: string;
-    slug: string;
-    description: string;
-    pricing: string;
-    category?: Category;
-}
-
-export default function ToolCard({ tool }: { tool: ToolItem }) {
+export default function ToolCard({ tool }: { tool: any }) {
     return (
-        <article className="group flex flex-col h-full bg-card rounded-2xl border border-border shadow-sm overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-foreground/20">
-            <Link href={`/tools/${tool.slug}`} className="flex flex-col h-full">
-                 {/* Image Placeholder Container (2:1 approx) with Zoom on Hover */}
-                 <div className="relative w-full pt-[40%] bg-muted/30 flex items-center justify-center overflow-hidden border-b border-border/50">
-                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/30 bg-muted/20 transition-transform duration-700 group-hover:scale-105">
-                        <Wrench className="w-8 h-8" />
+        <article className="group flex flex-col h-full bg-card rounded-2xl overflow-hidden border border-border transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div className="p-6 md:p-8 flex flex-col h-full">
+                <div className="flex justify-between items-start mb-6">
+                    {/* Tool Icon / Fallback */}
+                    <div className="w-16 h-16 rounded-2xl bg-muted border border-border flex items-center justify-center overflow-hidden shadow-sm transition-transform duration-500 group-hover:scale-110 group-hover:shadow-primary/20 group-hover:border-primary/50">
+                        {tool.logo ? (
+                            <img src={tool.logo} alt={tool.name} className="w-full h-full object-cover" loading="lazy" />
+                        ) : (
+                            <ImageIcon className="w-6 h-6 text-muted-foreground/50" />
+                        )}
                     </div>
+
+                    {/* Category */}
+                    <span className="text-xs font-bold tracking-widest text-primary bg-primary/10 px-3 py-1.5 rounded-lg uppercase">
+                        {tool.category || 'Utility'}
+                    </span>
                 </div>
 
-                <div className="flex flex-col flex-grow p-6 lg:p-8">
-                    <div className="flex justify-between items-start mb-4 gap-4">
-                        <h3 className="font-sans text-xl font-bold leading-tight group-hover:text-foreground/80 transition-colors line-clamp-2">
-                            {tool.name}
-                        </h3>
+                <h3 className="text-xl md:text-2xl font-heading font-bold tracking-tight text-card-foreground mb-3 group-hover:text-primary transition-colors line-clamp-1">
+                    {tool.name}
+                </h3>
+
+                <p className="text-muted-foreground text-sm md:text-base leading-relaxed line-clamp-3 mb-8 flex-grow">
+                    {tool.description}
+                </p>
+
+                {/* Footer Actions */}
+                <div className="flex items-center justify-between pt-6 border-t border-border mt-auto">
+                    <div className="flex items-center gap-1.5 bg-background border border-border px-3 py-1.5 rounded-lg shadow-sm">
+                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                        <span className="text-xs font-bold text-foreground">{tool.rating || '4.5'}</span>
                     </div>
 
-                    <p className="text-sm text-muted-foreground flex-grow line-clamp-3 leading-relaxed font-medium mb-6">
-                        {tool.description}
-                    </p>
+                    <div className="flex gap-4 items-center">
+                        {tool.websiteUrl && (
+                            <a
+                                href={tool.websiteUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-muted-foreground hover:text-primary transition-colors p-2 hover:bg-primary/5 rounded-full group/ext"
+                                aria-label={`Visit ${tool.name} website`}
+                            >
+                                <ExternalLink className="w-4 h-4 transition-transform duration-300 group-hover/ext:translate-y-px" />
+                            </a>
+                        )}
 
-                    <div className="mt-auto pt-4 border-t border-border/50 flex justify-between items-center text-xs tracking-wide">
-                        <span className="font-semibold text-muted-foreground uppercase">Pricing</span>
-                        <span className="capitalize font-medium px-2 py-1 rounded-md bg-muted/50 text-foreground/80">{tool.pricing || "Freemium"}</span>
+                        <Link
+                            href={`/tools/${tool.slug}`}
+                            className="flex items-center text-sm font-bold tracking-widest uppercase text-primary hover:text-primary/80 transition-colors group/link"
+                        >
+                            Explore
+                            <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-300 group-hover/link:translate-x-1" />
+                        </Link>
                     </div>
                 </div>
-            </Link>
+            </div>
         </article>
     );
 }

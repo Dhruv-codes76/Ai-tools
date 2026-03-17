@@ -8,34 +8,43 @@
   --color-border: var(--border);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   --font-sans: var(--font-inter);
+  --font-heading: var(--font-montserrat);
 }
 
 @layer base {
   :root {
     --background: #FFFFFF;
-    --foreground: #171717;
+    --foreground: #1A1A2E;
 
-    --card: #FFFFFF;
-    --card-foreground: #171717;
+    --card: #F9FAFB;
+    --card-foreground: #111827;
 
-    --muted: #F5F5F5;
-    --muted-foreground: #737373;
+    --muted: #F3F4F6;
+    --muted-foreground: #6B7280;
 
-    --border: #E5E5E5;
+    --border: #E5E7EB;
+
+    --primary: #00BFFF;
+    --primary-foreground: #FFFFFF;
   }
 
   .dark {
-    --background: #030303;
-    --foreground: #ededed;
+    --background: #1A1A2E;
+    --foreground: #F3F4F6;
 
-    --card: #171717;
-    --card-foreground: #ededed;
+    --card: #202035; /* slightly lighter than background */
+    --card-foreground: #F9FAFB;
 
-    --muted: #262626;
-    --muted-foreground: #a3a3a3;
+    --muted: #2A2A42;
+    --muted-foreground: #9CA3AF;
 
-    --border: #262626;
+    --border: #3A3A52;
+
+    --primary: #00BFFF;
+    --primary-foreground: #FFFFFF;
   }
 }
 
@@ -48,12 +57,11 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased selection:bg-foreground selection:text-background;
+    @apply bg-background text-foreground antialiased selection:bg-primary selection:text-white;
     min-height: 100vh;
   }
 
-  /* YT Music style subtle gradient background for dark mode */
-  /* Added smooth opacity transition so it doesn't abruptly appear */
+  /* Subtle gradient background for dark mode */
   body::before {
     content: '';
     position: fixed;
@@ -61,7 +69,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(ellipse at 50% 0%, #2b1738 0%, #030303 60%);
+    background: radial-gradient(ellipse at 50% 0%, rgba(0, 191, 255, 0.1) 0%, #1A1A2E 60%);
     z-index: -1;
     pointer-events: none;
     opacity: 0;
@@ -72,13 +80,8 @@
     opacity: 1;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-sans tracking-tight;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight text-foreground;
   }
 }
 
