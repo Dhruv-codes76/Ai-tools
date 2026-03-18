@@ -1,35 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { useEffect, useState, useRef } from "react";
-import { Home, Newspaper, Wrench, Menu, UserCircle } from "lucide-react";
-import { supabase } from "@/lib/supabaseClient";
+import { Home, Newspaper, Wrench, Menu } from "lucide-react";
 
 export default function Navbar() {
     const pathname = usePathname();
-    const router = useRouter();
     const [isVisible, setIsVisible] = useState(true);
     const lastScrollY = useRef(0);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [session, setSession] = useState<any>(null);
-
-    useEffect(() => {
-        // Fetch initial session
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-        });
-
-        // Listen for auth changes
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-        });
-
-        return () => subscription.unsubscribe();
-    }, []);
 
     useEffect(() => {
         let ticking = false;
@@ -59,25 +40,6 @@ export default function Navbar() {
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
-
-    const handleAdminClick = (e: React.MouseEvent) => {
-        e.preventDefault();
-        setMenuOpen(false);
-        if (session) {
-            router.push("/admin/dashboard");
-        } else {
-            router.push("/login");
-        }
-    };
-
-    const handleAuthClick = (e: React.MouseEvent) => {
-        e.preventDefault();
-        if (session) {
-            router.push("/admin/dashboard");
-        } else {
-            router.push("/login");
-        }
-    };
 
     const navLinks = [
         { name: "Home", href: "/", icon: Home },
@@ -122,43 +84,22 @@ export default function Navbar() {
                         <div className="flex items-center space-x-4">
                             <ThemeToggle />
 
-                            <div className="hidden md:block">
-                                {session ? (
-                                    <button
-                                        onClick={handleAuthClick}
-                                        className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-all duration-200 active:scale-95 hover:brightness-105"
-                                    >
-                                        {session.user?.user_metadata?.avatar_url ? (
-                                            <img src={session.user.user_metadata.avatar_url} alt="Profile" className="w-8 h-8 rounded-full" />
-                                        ) : (
-                                            <UserCircle className="w-6 h-6 text-foreground" />
-                                        )}
-                                    </button>
-                                ) : (
-                                    <Link
-                                        href="/login"
-                                        className="rounded-full bg-white text-black px-5 py-2.5 font-semibold text-sm hover:brightness-105 active:scale-95 transition-all duration-200 shadow-sm"
-                                    >
-                                        Login
-                                    </Link>
-                                )}
-                            </div>
-
-                            <div className="relative md:hidden">
+                            <div className="relative">
                                 <button
                                     onClick={() => setMenuOpen(!menuOpen)}
-                                    className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+                                    className="p-2 text-muted-foreground hover:text-foreground transition-colors hidden md:block"
                                 >
-                                    <Menu className="w-6 h-6" />
+                                    <Menu className="w-5 h-5" />
                                 </button>
                                 {menuOpen && (
                                     <div className="absolute right-0 mt-2 w-48 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] bg-card border border-white/10 overflow-hidden animate-fade-in origin-top-right">
-                                        <button
-                                            onClick={handleAdminClick}
-                                            className="w-full text-left px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
+                                        <Link
+                                            href="/admin/login"
+                                            onClick={() => setMenuOpen(false)}
+                                            className="block px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
                                         >
                                             Admin Dashboard
-                                        </button>
+                                        </Link>
                                     </div>
                                 )}
                             </div>
@@ -190,13 +131,13 @@ export default function Navbar() {
                         );
                     })}
 
-                    <button
-                        onClick={handleAdminClick}
+                    <Link
+                        href="/admin/login"
                         className="flex flex-col items-center justify-center w-full h-full space-y-1 transition-all duration-300 relative text-muted-foreground hover:text-foreground"
                     >
                         <Menu className="w-5 h-5" />
                         <span className="text-[10px] font-medium tracking-wide opacity-70">Admin</span>
-                    </button>
+                    </Link>
                 </div>
             </nav>
         </>
