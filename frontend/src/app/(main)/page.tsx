@@ -5,6 +5,9 @@ import NewsCard from "@/components/NewsCard";
 import ToolCard from "@/components/ToolCard";
 import { getNews, getTools } from "@/lib/api";
 
+// Ensure page is always dynamic (no stale caching)
+export const revalidate = 0;
+
 export default async function Home() {
   const { data: latestNews } = await getNews(1, 6);
   const { data: latestTools } = await getTools(1, 4);
