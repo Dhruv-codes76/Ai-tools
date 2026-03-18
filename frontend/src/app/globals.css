@@ -16,34 +16,30 @@
   :root {
     --background: #FFFFFF;
     --foreground: #101010;
-
     --card: #FFFFFF;
     --card-foreground: #101010;
-
     --muted: #F5F5F5;
     --muted-foreground: #737373;
-
     --border: #E5E5E5;
   }
 
   .dark {
-    --background: #000000;
-    --foreground: #F5F5F5;
-
-    --card: #121212;
-    --card-foreground: #F5F5F5;
-
-    --muted: #1A1A1A;
-    --muted-foreground: #A3A3A3;
-
-    --border: #262626;
+    /* Premium dark blue-black gradient feel */
+    --background: #05050A;
+    --foreground: #F5F5F7; /* Apple-like off-white */
+    --card: rgba(255, 255, 255, 0.03);
+    --card-foreground: #F5F5F7;
+    --muted: rgba(255, 255, 255, 0.05);
+    --muted-foreground: #A1A1AA;
+    --border: rgba(255, 255, 255, 0.1);
   }
 }
 
 @layer base {
   body {
-    @apply bg-background text-foreground antialiased selection:bg-foreground selection:text-background;
+    @apply bg-background text-foreground antialiased selection:bg-foreground/20 selection:text-foreground;
     min-height: 100vh;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11"; /* Inter specific improvements */
   }
 
   /* View Transitions API styles */
@@ -52,38 +48,38 @@
     animation: none;
     mix-blend-mode: normal;
   }
-
-  ::view-transition-old(root) {
-    z-index: 1;
-  }
-
-  ::view-transition-new(root) {
-    z-index: 2;
-  }
-
-  .dark::view-transition-old(root) {
-    z-index: 2;
-  }
-
-  .dark::view-transition-new(root) {
-    z-index: 1;
-  }
+  ::view-transition-old(root) { z-index: 1; }
+  ::view-transition-new(root) { z-index: 2; }
+  .dark::view-transition-old(root) { z-index: 2; }
+  .dark::view-transition-new(root) { z-index: 1; }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-sans font-bold tracking-tight text-foreground;
+    @apply font-sans font-semibold tracking-tight text-foreground;
+  }
+
+  p {
+    @apply leading-[1.7];
   }
 }
 
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
+    animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 }
 
 @keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;

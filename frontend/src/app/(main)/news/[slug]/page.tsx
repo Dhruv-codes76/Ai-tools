@@ -62,16 +62,20 @@ export default async function SingleNewsPage({ params }: { params: Promise<{ slu
     };
 
     return (
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="max-w-2xl mx-auto px-4 md:px-8 py-10 md:py-16 animate-fade-in animate-slide-up">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <BackLink href="/news" label="Directory" />
 
-            <article>
+            <div className="mb-8">
+                <BackLink href="/news" label="Directory" />
+            </div>
+
+            <article className="space-y-6 md:space-y-10">
                 {article.featuredImage && (
-                    <div className="w-full aspect-video mb-12 border border-border overflow-hidden">
+                    <div className="w-full aspect-video rounded-2xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img 
                             src={article.featuredImage} 
                             alt={article.featuredImageAlt || article.title} 
@@ -80,41 +84,44 @@ export default async function SingleNewsPage({ params }: { params: Promise<{ slu
                     </div>
                 )}
 
-                <header className="border-b-4 border-foreground pb-8 mb-10">
-                    <h1 className="text-4xl md:text-6xl font-sans font-bold tracking-tight leading-none mb-6 text-foreground">
+                <header className="pb-8 border-b border-white/10">
+                    <h1 className="text-3xl md:text-5xl font-sans font-semibold tracking-tight text-foreground leading-[1.2] mb-6">
                         {article.title}
                     </h1>
 
-                    <div className="flex items-center text-sm font-medium tracking-widest text-muted-foreground uppercase">
+                    <div className="flex items-center text-sm font-medium tracking-wide text-muted-foreground uppercase">
                         <time>{date}</time>
-                        <span className="mx-4">&mdash;</span>
+                        <span className="mx-4">&middot;</span>
                         <span>Intelligence Brief</span>
                     </div>
                 </header>
 
-                <p className="text-xl md:text-2xl font-sans text-muted-foreground italic mb-12 leading-relaxed">
+                <p className="text-lg md:text-xl font-sans text-muted-foreground italic leading-relaxed border-l-4 border-white/20 pl-4 py-2">
                     {article.summary}
                 </p>
 
                 <div 
-                    className="prose prose-lg dark:prose-invert max-w-none mb-16 font-sans text-muted-foreground leading-loose"
+                    className="prose prose-lg dark:prose-invert max-w-none mb-16 font-sans text-gray-300 leading-[1.8]"
                     dangerouslySetInnerHTML={{ __html: article.content }}
                 />
 
                 {article.sourceLink && (
-                    <footer className="pt-8 border-t border-border">
+                    <footer className="pt-8 border-t border-white/10">
                         <a
                             href={article.sourceLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-block text-sm font-bold tracking-widest uppercase text-foreground border-b border-foreground hover:text-muted-foreground hover:border-muted-foreground transition-all pb-1"
+                            className="inline-flex items-center text-sm font-semibold tracking-wide text-blue-400 hover:text-blue-300 transition-colors"
                         >
                             Read Original Source &rarr;
                         </a>
                     </footer>
                 )}
             </article>
-            <CommentSection articleId={article._id} />
+
+            <div className="mt-16 pt-16 border-t border-white/10">
+                <CommentSection articleId={article._id} />
+            </div>
         </div>
     );
 }

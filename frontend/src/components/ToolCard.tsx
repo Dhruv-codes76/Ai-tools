@@ -18,7 +18,7 @@ interface ToolItem {
 
 export default function ToolCard({ tool }: { tool: ToolItem }) {
     return (
-        <article className="group flex flex-col h-full bg-card rounded-2xl border border-border shadow-sm overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-foreground/20">
+        <article className="group flex flex-col h-full bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden transition-all duration-300 hover:scale-[1.01] hover:bg-white/10 hover:border-white/20">
             <Link href={`/tools/${tool.slug}`} className="flex flex-col h-full">
                  {/* Image Placeholder Container (2:1 approx) with Zoom on Hover */}
                  <div className="relative w-full pt-[40%] bg-muted/30 flex items-center justify-center overflow-hidden border-b border-border/50">
