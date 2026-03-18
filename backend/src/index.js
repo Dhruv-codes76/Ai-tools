@@ -4,7 +4,7 @@ const https = require('https');
 dns.setDefaultResultOrder('ipv4first');
 https.globalAgent = new https.Agent({ family: 4 });
 const express = require('express');
-const mongoose = require('mongoose');
+
 const cors = require('cors');
 const morgan = require('morgan');
 
@@ -33,10 +33,11 @@ app.use('/api', commentRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/logs', activityLogRoutes);
 
-// Database connection
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.log('MongoDB Connection Error:', err));
+// Initialize Prisma Connection
+const prisma = require('./prisma');
+prisma.$connect()
+    .then(() => console.log('Prisma disconnected nicely... just kidding, Prisma PostgreSQL Connected!'))
+    .catch(err => console.log('Prisma Connection Error:', err));
 
 const errorHandler = require('./middleware/errorHandler');
 
@@ -52,4 +53,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });
-
