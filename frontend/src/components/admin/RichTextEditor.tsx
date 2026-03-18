@@ -127,7 +127,7 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
     return (
         <div className="border border-border bg-background transition-all">
             {/* Toolbar */}
-            <div className="border-b-2 border-border p-2 flex flex-wrap gap-1 bg-muted/30 sticky top-0 z-10">
+            <div className="border-b-2 border-border p-2 flex flex-nowrap overflow-x-auto gap-1 bg-muted/30 sticky top-0 z-10 scrollbar-hide shrink-0">
                 <MenuButton 
                     onClick={() => editor.chain().focus().toggleBold().run()} 
                     active={editor.isActive('bold')}
@@ -304,7 +304,7 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
                     </BubbleMenu>
                 )}
 
-                <EditorContent editor={editor} />
+                <EditorContent editor={editor} className="min-h-[300px] max-h-[600px] overflow-y-auto w-full p-4 custom-editor" />
                 
                 {/* Internal Link Modal */}
                 {isLinkModalOpen && (

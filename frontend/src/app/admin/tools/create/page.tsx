@@ -180,11 +180,11 @@ export default function CreateToolPage() {
                     />
                 </div>
 
-                <div className="pt-8 border-t border-border flex justify-end">
+                <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t border-border p-4 z-50 flex justify-center md:justify-end md:px-12">
                     <button
                         type="submit"
                         disabled={loading}
-                        className="px-8 py-4 bg-foreground text-background font-bold tracking-widest uppercase text-sm hover:bg-background hover:text-foreground border border-foreground transition-all disabled:opacity-50"
+                        className="w-full md:w-auto px-8 py-4 bg-foreground text-background font-bold tracking-widest uppercase text-sm hover:bg-background hover:text-foreground border border-foreground transition-all disabled:opacity-50"
                     >
                         {loading ? "Adding..." : "Add Tool"}
                     </button>

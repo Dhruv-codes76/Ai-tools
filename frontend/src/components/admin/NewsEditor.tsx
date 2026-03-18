@@ -417,7 +417,7 @@ export default function NewsEditor({ initialData, onSubmit, loading, isEdit = fa
             </div>
 
             {/* Floating Action Bar */}
-            <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t-2 border-foreground p-4 z-50 flex justify-center lg:justify-end lg:px-12">
+            <div className="fixed bottom-0 md:bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t-2 border-foreground p-4 z-50 flex justify-center lg:justify-end lg:px-12">
                 <div className="flex items-center gap-4 w-full max-w-7xl mx-auto justify-between lg:justify-end">
                     <div className="text-xs font-black uppercase tracking-widest text-muted-foreground hidden md:flex items-center gap-4">
                         {!healthChecks.every(c => c.passed) && (
