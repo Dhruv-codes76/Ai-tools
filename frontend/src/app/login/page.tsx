@@ -24,7 +24,7 @@ export default function LoginPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-[#0E0E10] flex items-center justify-center">
+            <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
                 <div className="w-12 h-12 border-4 border-white/10 border-t-white/80 rounded-full animate-spin"></div>
             </div>
         );
@@ -56,11 +56,11 @@ export default function LoginPage() {
             </div>
 
             {/* Mobile / Right Side Login Panel */}
-            <div className="flex-1 flex items-center justify-center p-6 sm:p-12 relative z-10 bg-[#0E0E10]/95 md:bg-[#0E0E10] md:max-w-2xl 2xl:max-w-3xl animate-fade-in shadow-[-20px_0_50px_rgba(0,0,0,0.5)]">
+            <div className="flex-1 flex items-center justify-center p-6 sm:p-12 relative z-10 bg-[#0A0A0A]/95 md:bg-[#0A0A0A] md:max-w-xl 2xl:max-w-2xl animate-fade-in shadow-[inset_20px_0_50px_rgba(0,0,0,0.5)]">
                 {/* Ambient glow behind card */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 blur-[100px] rounded-full z-0 pointer-events-none"></div>
 
-                <div className="w-full relative z-10 transform sm:scale-105">
+                <div className="w-full relative z-10 flex justify-center py-20">
                     <LoginCard />
                 </div>
             </div>
