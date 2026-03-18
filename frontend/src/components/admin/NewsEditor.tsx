@@ -25,6 +25,7 @@ export interface NewsFormData {
     twitterImage: string;
     featuredImage: string;
     featuredImageAlt: string;
+    featuredImageFile?: File;
 }
 
 interface NewsEditorProps {

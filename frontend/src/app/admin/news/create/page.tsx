@@ -39,13 +39,22 @@ export default function CreateNewsPage() {
             const token = localStorage.getItem("adminToken");
             if (!token) return router.push("/admin/login");
 
+            const submissionData = new FormData();
+            Object.keys(formData).forEach(key => {
+                const value = (formData as any)[key];
+                if (key === 'featuredImageFile' && value) {
+                    submissionData.append('featuredImage', value);
+                } else if (value !== undefined && value !== null) {
+                    submissionData.append(key, value);
+                }
+            });
+
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/news`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify(formData)
+                body: submissionData
             });
 
             const data = await res.json();
