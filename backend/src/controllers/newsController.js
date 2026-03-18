@@ -3,6 +3,8 @@ const { softDelete, restore } = require('../utils/softDelete');
 const { logActivity } = require('../utils/logger');
 const { generateSEO } = require('../utils/seoUtils');
 const AppError = require('../utils/AppError');
+const { handleImageUploads } = require('../utils/cloudinary');
+
 
 const getNews = async (req, res, next) => {
     try {
@@ -41,7 +43,11 @@ const getNewsBySlug = async (req, res, next) => {
 
 const createNews = async (req, res, next) => {
     try {
-        const articleData = generateSEO(req.body, 'news');
+        let articleData = generateSEO(req.body, 'news');
+        
+        // Handle image uploads if any
+        articleData = await handleImageUploads(req.files, articleData, 'news');
+
         const article = new News(articleData);
         await article.save();
         await logActivity(req, 'CREATE', 'News', article._id, { title: article.title });
@@ -53,7 +59,11 @@ const createNews = async (req, res, next) => {
 
 const updateNews = async (req, res, next) => {
     try {
-        const articleData = generateSEO(req.body, 'news');
+        let articleData = generateSEO(req.body, 'news');
+
+        // Handle image uploads if any
+        articleData = await handleImageUploads(req.files, articleData, 'news');
+
         const article = await News.findByIdAndUpdate(req.params.id, articleData, { new: true });
 
         if (!article) return next(new AppError('Article not found with that ID', 404));
@@ -64,6 +74,7 @@ const updateNews = async (req, res, next) => {
         next(error);
     }
 };
+
 
 const deactivateNews = async (req, res, next) => {
     return softDelete(req, News, req.params.id, res, next);
