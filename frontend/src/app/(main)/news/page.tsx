@@ -10,6 +10,9 @@ export const metadata = {
     description: "Read the latest beginner-friendly, unbiased AI news.",
 };
 
+// Ensure page is always dynamic (no stale caching)
+export const revalidate = 0;
+
 export default async function NewsPage() {
     const { data: newsItems } = await getNews();
 
