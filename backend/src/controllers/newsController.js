@@ -10,7 +10,7 @@ const getNews = async (req, res, next) => {
         const limit = parseInt(req.query.limit) || 12;
 
         // Ensure we fetch both published and draft if it's the admin panel
-        const query = req.header('Authorization') ? { isDeleted: false } : { status: 'published', isDeleted: false };
+        const query = req.header('Authorization') ? { isDeleted: false } : { status: { $regex: '^published$', $options: 'i' }, isDeleted: false };
 
         const news = await News.find(query)
             .sort({ createdAt: -1 })
