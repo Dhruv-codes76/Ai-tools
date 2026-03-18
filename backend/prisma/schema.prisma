@@ -1,0 +1,126 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+}
+
+model Admin {
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  passwordHash String
+  status       AdminStatus   @default(ACTIVE)
+  isDeleted    Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  logs         ActivityLog[]
+}
+
+enum AdminStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique
+  description String?
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tools       Tool[]
+}
+
+model Tool {
+  id                 Int         @id @default(autoincrement())
+  name               String
+  slug               String      @unique
+  description        String
+  website            String
+  pricing            ToolPricing
+  category           Category?   @relation(fields: [categoryId], references: [id])
+  categoryId         Int?
+  tags               String[]
+  affiliateLink      String?
+  verified           Boolean     @default(false)
+  seoMetaTitle       String?
+  seoMetaDescription String?
+  canonicalUrl       String?
+  ogTitle            String?
+  ogDescription      String?
+  ogImage            String?
+  twitterTitle       String?
+  twitterDescription String?
+  twitterImage       String?
+  keywords           String[]
+  featuredImage      String?
+  featuredImageAlt   String?
+  status             DocStatus   @default(DRAFT)
+  isDeleted          Boolean     @default(false)
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+}
+
+enum ToolPricing {
+  FREE
+  FREEMIUM
+  PAID
+}
+
+model News {
+  id                 Int       @id @default(autoincrement())
+  title              String
+  slug               String    @unique
+  summary            String
+  content            String
+  sourceLink         String?
+  tags               String[]
+  seoMetaTitle       String?
+  seoMetaDescription String?
+  canonicalUrl       String?
+  ogTitle            String?
+  ogDescription      String?
+  ogImage            String?
+  twitterTitle       String?
+  twitterDescription String?
+  twitterImage       String?
+  keywords           String[]
+  featuredImage      String?
+  featuredImageAlt   String?
+  status             DocStatus @default(DRAFT)
+  isDeleted          Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+enum DocStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  articleId   String // Maps to news slug/id
+  anonymousId String
+  commentText String
+  parentId    String?
+  likes       Int      @default(0)
+  isHidden    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model ActivityLog {
+  id          Int      @id @default(autoincrement())
+  admin       Admin    @relation(fields: [adminId], references: [id])
+  adminId     Int
+  adminEmail  String
+  action      String
+  resource    String
+  resourceId  String?
+  details     Json?
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+}

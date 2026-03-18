@@ -1,22 +1,36 @@
 const { logActivity } = require('./logger');
 const AppError = require('./AppError');
 
-const softDelete = async (req, Model, id, res, next) => {
-    const doc = await Model.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
-    // If ID formatting is wrong, Mongoose throws CastError which is handled automatically.
-    // If valid ID format but no doc found:
-    if (!doc) return next(new AppError(`${Model.modelName} not found`, 404));
-
-    await logActivity(req, 'DEACTIVATE', Model.modelName, doc._id);
-    res.json({ message: `${Model.modelName} deactivated successfully`, data: doc });
+const softDelete = async (req, prismaModel, modelName, id, res, next) => {
+    try {
+        const doc = await prismaModel.update({
+            where: { id: parseInt(id, 10) },
+            data: { isDeleted: true }
+        });
+        await logActivity(req, 'DEACTIVATE', modelName, doc.id.toString());
+        res.json({ message: `${modelName} deactivated successfully`, data: doc });
+    } catch (err) {
+        if (err.code === 'P2025') {
+            return next(new AppError(`${modelName} not found`, 404));
+        }
+        return next(err);
+    }
 };
 
-const restore = async (req, Model, id, res, next) => {
-    const doc = await Model.findByIdAndUpdate(id, { isDeleted: false }, { new: true });
-    if (!doc) return next(new AppError(`${Model.modelName} not found`, 404));
-
-    await logActivity(req, 'RESTORE', Model.modelName, doc._id);
-    res.json({ message: `${Model.modelName} restored successfully`, data: doc });
+const restore = async (req, prismaModel, modelName, id, res, next) => {
+    try {
+        const doc = await prismaModel.update({
+            where: { id: parseInt(id, 10) },
+            data: { isDeleted: false }
+        });
+        await logActivity(req, 'RESTORE', modelName, doc.id.toString());
+        res.json({ message: `${modelName} restored successfully`, data: doc });
+    } catch (err) {
+        if (err.code === 'P2025') {
+            return next(new AppError(`${modelName} not found`, 404));
+        }
+        return next(err);
+    }
 };
 
 module.exports = { softDelete, restore };
