@@ -18,11 +18,11 @@ const { createNewsSchema } = require('../validations/newsValidation');
 router.get('/', getNews);
 router.get('/:slug', getNewsBySlug);
 
-router.post('/', authMiddleware, validate(createNewsSchema), upload.fields([
+router.post('/', authMiddleware, upload.fields([
   { name: 'featuredImage', maxCount: 1 },
   { name: 'ogImage', maxCount: 1 },
   { name: 'twitterImage', maxCount: 1 }
-]), createNews);
+]), validate(createNewsSchema), createNews);
 router.put('/:id', authMiddleware, upload.fields([
   { name: 'featuredImage', maxCount: 1 },
   { name: 'ogImage', maxCount: 1 },

@@ -1,7 +1,9 @@
+const { ZodError } = require('zod');
 const AppError = require('../utils/AppError');
 
 /**
  * Higher-order middleware to validate request data against a Zod schema.
+ * NOTE: For multipart/form-data routes, this must be placed AFTER upload middleware.
  */
 const validate = (schema) => (req, res, next) => {
   try {
@@ -12,8 +14,11 @@ const validate = (schema) => (req, res, next) => {
     });
     next();
   } catch (error) {
-    const message = error.errors.map((i) => `${i.path.join('.')}: ${i.message}`).join(', ');
-    next(new AppError(message, 400));
+    if (error instanceof ZodError) {
+      const message = error.issues.map((i) => `${i.path.slice(1).join('.')}: ${i.message}`).join(', ');
+      return next(new AppError(message, 400));
+    }
+    next(error);
   }
 };
 
