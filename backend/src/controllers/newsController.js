@@ -23,7 +23,8 @@ const getNews = async (req, res, next) => {
             isAuthorized
         });
 
-        ApiResponse.success(res, { news, ...pagination });
+        // Keep original shape — frontend depends on { data: [], total, page, totalPages }
+        res.json({ data: news, ...pagination });
     } catch (error) {
         next(error);
     }
@@ -33,7 +34,7 @@ const getNewsBySlug = async (req, res, next) => {
     try {
         const isAuthorized = !!req.header('Authorization');
         const article = await newsService.getNewsBySlug(req.params.slug, isAuthorized);
-        ApiResponse.success(res, article);
+        res.json(article);
     } catch (error) {
         next(error);
     }
