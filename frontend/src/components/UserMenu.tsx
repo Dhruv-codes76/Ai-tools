@@ -63,7 +63,7 @@ export default function UserMenu() {
         });
 
         if (error) {
-            console.error('Error logging in with Google:', error.message);
+            console.error('Error logging in with Google:', error?.message);
         }
     };
 
