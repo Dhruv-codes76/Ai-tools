@@ -90,6 +90,9 @@ export default function ReelComments({ newsId }: { newsId: string }) {
     };
 
     const handleLogin = async () => {
+        window.location.href = "/login";
+        return;
+
         await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: { redirectTo: `${window.location.origin}/auth/callback` }

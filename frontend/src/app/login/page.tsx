@@ -1,13 +1,14 @@
 "use client";
 
-import LoginCard from "@/components/LoginCard";
-import { supabase } from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
+import IdCardLogin from "@/components/auth/IdCardLogin";
+import { Sparkles, ShieldCheck, Zap } from "lucide-react";
 
 export default function LoginPage() {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const checkSession = async () => {
@@ -15,54 +16,75 @@ export default function LoginPage() {
             if (session) {
                 router.push('/');
             } else {
-                setIsLoading(false);
+                setLoading(false);
             }
         };
 
         checkSession();
     }, [router]);
 
-    if (isLoading) {
+    if (loading) {
         return (
-            <div className="min-h-screen bg-[#0E0E10] flex items-center justify-center">
-                <div className="w-12 h-12 border-4 border-white/10 border-t-white/80 rounded-full animate-spin"></div>
+            <div className="min-h-[calc(100vh-64px)] w-full flex items-center justify-center bg-[#0a0a0a]">
+                <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen flex flex-col md:flex-row bg-[#0E0E10]">
-            {/* Desktop Left Side - Video Background */}
-            <div className="hidden md:flex flex-1 relative items-center justify-center overflow-hidden bg-black border-r border-white/5 shadow-2xl z-0">
-                <div className="absolute inset-0 z-10 bg-gradient-to-tr from-black/80 via-black/40 to-transparent"></div>
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover opacity-80 z-0 transition-opacity duration-1000"
-                >
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-background-with-colored-light-spheres-moving-30311-large.mp4" type="video/mp4" />
-                </video>
-                <div className="z-20 p-16 max-w-2xl text-left mt-auto pb-32">
-                    <h1 className="text-5xl lg:text-7xl font-sans font-bold text-white tracking-tight leading-[1.1] mb-6 drop-shadow-2xl">
-                        Unbiased AI Insights. <br />
-                        <span className="text-white/60">Absolute clarity.</span>
-                    </h1>
-                    <p className="text-xl text-white/80 font-medium max-w-lg leading-relaxed drop-shadow-lg border-l-4 border-white/20 pl-6 py-2">
-                        Filter the robust signal from the incessant noise. Join the intelligence directory to supercharge your workflow.
-                    </p>
-                </div>
+        <div className="min-h-[calc(100vh-64px)] w-full flex items-center justify-center bg-[#0a0a0a] overflow-hidden relative selection:bg-indigo-500/30">
+
+            {/* Background Effects */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/10 blur-[120px] rounded-full mix-blend-screen" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full mix-blend-screen" />
+                <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay" />
             </div>
 
-            {/* Mobile / Right Side Login Panel */}
-            <div className="flex-1 flex items-center justify-center p-6 sm:p-12 relative z-10 bg-[#0E0E10]/95 md:bg-[#0E0E10] md:max-w-2xl 2xl:max-w-3xl animate-fade-in shadow-[-20px_0_50px_rgba(0,0,0,0.5)]">
-                {/* Ambient glow behind card */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/10 blur-[100px] rounded-full z-0 pointer-events-none"></div>
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24 relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-24">
 
-                <div className="w-full relative z-10 transform sm:scale-105">
-                    <LoginCard />
+                {/* Left Content (Desktop) / Hidden on Mobile */}
+                <div className="hidden lg:flex flex-col flex-1 max-w-2xl animate-fade-in animate-slide-up">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-indigo-300 w-fit mb-8 backdrop-blur-md">
+                        <Sparkles className="w-3.5 h-3.5" /> Welcome to the platform
+                    </div>
+
+                    <h1 className="text-5xl xl:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.1]">
+                        Join the <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">conversation</span> today.
+                    </h1>
+
+                    <p className="text-lg xl:text-xl text-white/60 mb-10 max-w-xl leading-relaxed">
+                        Sign in to share your insights, connect with other enthusiasts, and unlock the full potential of our AI intelligence platform.
+                    </p>
+
+                    <div className="flex flex-col gap-6">
+                        <div className="flex items-start gap-4 group">
+                            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-indigo-500/20 group-hover:border-indigo-500/30 transition-colors">
+                                <Zap className="w-6 h-6 text-indigo-400" />
+                            </div>
+                            <div>
+                                <h3 className="text-white font-semibold text-lg mb-1">Instant Access</h3>
+                                <p className="text-white/50 text-sm leading-relaxed">Join instantly with your Google account. No long forms or complex setups required.</p>
+                            </div>
+                        </div>
+
+                        <div className="flex items-start gap-4 group">
+                            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-purple-500/20 group-hover:border-purple-500/30 transition-colors">
+                                <ShieldCheck className="w-6 h-6 text-purple-400" />
+                            </div>
+                            <div>
+                                <h3 className="text-white font-semibold text-lg mb-1">Secure & Private</h3>
+                                <p className="text-white/50 text-sm leading-relaxed">Your data is secured with enterprise-grade encryption. We never share your personal information.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                {/* Right Content (ID Card Login) */}
+                <div className="w-full lg:w-auto flex-1 flex justify-center lg:justify-end mt-16 lg:mt-0">
+                    <IdCardLogin />
+                </div>
+
             </div>
         </div>
     );

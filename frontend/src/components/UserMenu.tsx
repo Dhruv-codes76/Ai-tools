@@ -50,7 +50,11 @@ export default function UserMenu() {
         };
     }, [menuOpen]);
 
+    const router = import("next/navigation").then(m => m.useRouter());
     const handleLogin = async () => {
+        window.location.href = "/login";
+        return;
+
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
