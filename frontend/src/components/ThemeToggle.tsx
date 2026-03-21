@@ -22,7 +22,9 @@ export function ThemeToggle() {
     const toggleTheme = (event: React.MouseEvent<HTMLButtonElement>) => {
         const nextTheme = isDark ? "light" : "dark";
 
-        // Fallback for browsers that don't support View Transitions API
+        /**
+         * Fallback for browsers that don't support View Transitions API
+         */
         if (!document.startViewTransition) {
             setTheme(nextTheme);
             return;
