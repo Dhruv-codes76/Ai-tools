@@ -43,14 +43,14 @@ export default function Logo({ size = "md", variant = "icon", animated = true, c
 
     // Choose logo source based on theme and variant
     const imgSrc = isDark
-        ? (variant === "full" ? "/logos/Darkmodefullogowithtext.png" : "/logos/Darkmodelogo.png")
-        : (variant === "full" ? "/logos/Lightmodefullogowithtext.png" : "/logos/Lightmodelogo.png");
+        ? (variant === "full" ? "/logos/logo-full-dark.png" : "/logos/logo-icon-dark.png")
+        : (variant === "full" ? "/logos/logo-full-light.png" : "/logos/logo-icon-light.png");
 
     const altText = variant === "full" ? "AI Portal Logo" : "AI Portal Icon";
 
     const content = (
         <div className={`
-            flex items-center justify-center cursor-pointer
+            flex items-center justify-center cursor-pointer bg-transparent transition-colors duration-300 ease-in-out
             ${animated ? 'animate-premium-entry premium-hover premium-active' : ''}
             ${className}
         `}>
@@ -58,7 +58,7 @@ export default function Logo({ size = "md", variant = "icon", animated = true, c
             <img
                 src={imgSrc}
                 alt={altText}
-                className={`${sizeClasses[size]} w-auto object-contain`}
+                className={`${sizeClasses[size]} w-auto object-contain bg-transparent transition-colors duration-300 ease-in-out`}
             />
         </div>
     );

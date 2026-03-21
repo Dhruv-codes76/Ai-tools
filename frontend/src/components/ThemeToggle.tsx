@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 export function ThemeToggle() {
-    const { theme, setTheme, systemTheme } = useTheme();
+    const { theme, setTheme, resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -17,7 +17,7 @@ export function ThemeToggle() {
         return <div className="w-10 h-10 rounded-full bg-transparent" aria-hidden="true" />;
     }
 
-    const isDark = theme === "dark" || (theme === "system" && systemTheme === "dark");
+    const isDark = resolvedTheme === "dark";
 
     const toggleTheme = (event: React.MouseEvent<HTMLButtonElement>) => {
         const nextTheme = isDark ? "light" : "dark";
