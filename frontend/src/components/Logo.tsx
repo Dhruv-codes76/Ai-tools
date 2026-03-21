@@ -3,7 +3,6 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 
 type LogoSize = "sm" | "md" | "lg";
 type LogoVariant = "icon" | "full";
@@ -25,9 +24,9 @@ export default function Logo({ size = "md", variant = "icon", animated = true, c
     }, []);
 
     const sizeClasses = {
-        sm: "h-6",
-        md: "h-8",
-        lg: "h-10"
+        sm: "w-6 h-6",
+        md: "w-10 h-10",
+        lg: "w-12 h-12"
     };
 
     // Before mounting, render a skeleton to avoid hydration mismatch
@@ -58,7 +57,7 @@ export default function Logo({ size = "md", variant = "icon", animated = true, c
             <img
                 src={imgSrc}
                 alt={altText}
-                className={`${sizeClasses[size]} w-auto object-contain bg-transparent transition-colors duration-300 ease-in-out`}
+                className={`${sizeClasses[size]} object-contain bg-transparent transition-colors duration-300 ease-in-out`}
             />
         </div>
     );

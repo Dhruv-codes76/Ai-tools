@@ -204,14 +204,18 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
 
             {/* Top Navbar */}
             <nav
-                className={`fixed top-0 left-0 right-0 backdrop-blur-xl bg-background/90 border-b border-gray-200 dark:border-white/10 transition-transform duration-300 ease-in-out z-50 pt-safe ${
+                className={`fixed top-0 left-0 right-0 backdrop-blur-xl bg-background/90 border-b border-gray-200 shadow-sm dark:shadow-none dark:border-white/10 transition-transform duration-300 ease-in-out z-50 pt-safe ${
                     isVisible ? "translate-y-0" : "-translate-y-full"
                 } ${isMobileReels && !isSearchOpen ? "hidden md:block" : "block"}`}
             >
                 <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-14 md:h-16 relative">
-                        {/* Logo */}
-                        <Logo size="md" variant="icon" animated={true} className="shrink-0" />
+                        <Link href="/" className="flex items-center gap-2 md:gap-3 shrink-0 group">
+                            <Logo size="lg" variant="icon" animated={true} disableLink={true} className="shrink-0 group-hover:scale-105 transition-transform" />
+                            <span className="font-bold tracking-tight text-lg md:text-xl text-gray-900 dark:text-white transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                                AI Portal
+                            </span>
+                        </Link>
 
                         {/* Desktop Nav - Hide when search is expanded on smaller screens */}
                         <div className={`hidden md:flex space-x-8 lg:space-x-12 items-center absolute left-1/2 transform -translate-x-1/2 transition-opacity duration-300 ${isSearchOpen ? 'opacity-0 md:opacity-100' : 'opacity-100'}`}>
@@ -221,7 +225,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                     <Link
                                         key={link.name}
                                         href={link.href} prefetch={true}
-                                        className={`text-sm tracking-wide transition-all duration-300 relative py-2 font-medium ${isActive ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                                        className={`text-sm tracking-wide transition-all duration-300 relative py-2 font-medium ${isActive ? "text-gray-900 dark:text-white" : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                                             }`}
                                     >
                                         {link.name}
@@ -408,7 +412,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
             </nav>
 
             {/* Mobile Bottom Navigation */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-2xl border-t border-gray-200 dark:border-white/10 pb-safe shadow-[0_-8px_30px_rgb(0,0,0,0.1)] dark:shadow-[0_-8px_30px_rgb(0,0,0,0.3)]">
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-2xl border-t border-gray-200 dark:border-white/10 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_-8px_30px_rgb(0,0,0,0.3)]">
                 <div className="flex justify-around items-center h-[60px] px-2 w-full max-w-md mx-auto">
                     {navLinks.map((link) => {
                         const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
@@ -418,7 +422,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                 key={link.name}
                                 href={link.href} prefetch={true}
                                 className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-all duration-300 relative group ${
-                                    isActive ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                                    isActive ? "text-gray-900 dark:text-white" : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                                 }`}
                             >
                                 <div className="relative flex items-center justify-center">
@@ -444,7 +448,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                             }, 300);
                         }}
                         className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-all duration-300 relative group ${
-                            isSearchOpen ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                            isSearchOpen ? "text-gray-900 dark:text-white" : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                         }`}
                     >
                         <div className="relative flex items-center justify-center">
