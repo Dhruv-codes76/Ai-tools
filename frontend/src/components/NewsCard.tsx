@@ -56,7 +56,7 @@ export default function NewsCard({ news }: { news: NewsItem }) {
     };
 
     return (
-        <article className="group flex flex-col h-full bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-visible transition-all duration-300 hover:scale-[1.01] hover:bg-white/10 hover:border-white/20 relative">
+        <article className="group flex flex-col h-full bg-card backdrop-blur-xl rounded-2xl border border-border shadow-sm hover:shadow-md overflow-visible transition-all duration-300 hover:scale-[1.01] hover:bg-white/10 hover:border-white/20 relative">
             <Link prefetch={true} href={`/news/${news.slug}`} className="flex flex-col h-full rounded-2xl transition-all duration-200 active:scale-[0.98] active:opacity-90 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
 
                 {/* Image Placeholder Container (16:9) */}
