@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getNewsBySlug } from "@/lib/api";
 import BackLink from "@/components/BackLink";
 import SwipeToBack from "@/components/SwipeToBack";
+import ArticleClientControls from "./ArticleClientControls";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
     const slug = (await params).slug;
@@ -70,8 +71,14 @@ export default async function SingleNewsPage({ params }: { params: Promise<{ slu
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
                 />
 
-                <div className="mb-10">
+                <div className="mb-10 flex justify-between items-center">
                     <BackLink href="/news" label="Back to News" />
+
+                    <ArticleClientControls
+                        title={article.title}
+                        slug={article.slug}
+                        imageUrl={article.featuredImage}
+                    />
                 </div>
 
                 <article>
@@ -84,10 +91,12 @@ export default async function SingleNewsPage({ params }: { params: Promise<{ slu
                             {article.summary}
                         </p>
 
-                        <div className="flex items-center gap-4 text-sm font-medium text-muted-foreground/80 mb-8 border-b border-border pb-8">
-                            <time>{date}</time>
-                            <span className="w-1 h-1 rounded-full bg-border"></span>
-                            <span>Intelligence Brief</span>
+                        <div className="flex items-center justify-between text-sm font-medium text-muted-foreground/80 mb-8 border-b border-border pb-8">
+                            <div className="flex items-center gap-4">
+                                <time>{date}</time>
+                                <span className="w-1 h-1 rounded-full bg-border"></span>
+                                <span>Intelligence Brief</span>
+                            </div>
                         </div>
                     </header>
 
@@ -107,7 +116,7 @@ export default async function SingleNewsPage({ params }: { params: Promise<{ slu
                     />
 
                     {article.sourceLink && (
-                        <footer className="pt-8 mt-12">
+                        <footer className="pt-8 mt-12 border-t border-border flex justify-between items-center">
                             <a
                                 href={article.sourceLink}
                                 target="_blank"
@@ -117,6 +126,12 @@ export default async function SingleNewsPage({ params }: { params: Promise<{ slu
                                 Read Original Source
                                 <span className="ml-2 group-hover:translate-x-1 transition-transform">&rarr;</span>
                             </a>
+
+                            <ArticleClientControls
+                                title={article.title}
+                                slug={article.slug}
+                                imageUrl={article.featuredImage}
+                            />
                         </footer>
                     )}
                 </article>
