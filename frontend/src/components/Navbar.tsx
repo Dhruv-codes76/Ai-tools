@@ -183,7 +183,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
             <nav
                 className={`fixed top-0 left-0 right-0 backdrop-blur-xl bg-white/90 dark:bg-zinc-900/90 border-b border-gray-200 dark:border-white/10 transition-transform duration-300 ease-in-out z-50 pt-safe ${
                     isVisible ? "translate-y-0" : "-translate-y-full"
-                } ${isMobileReels ? "hidden md:block" : "block"}`}
+                } ${isMobileReels && !isSearchOpen ? "hidden md:block" : "block"}`}
             >
                 <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-14 md:h-16 relative">
@@ -193,28 +193,60 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                         {/* Desktop Nav - Hide when search is expanded on smaller screens */}
                         <div className={`hidden md:flex space-x-8 lg:space-x-12 items-center absolute left-1/2 transform -translate-x-1/2 transition-opacity duration-300 ${isSearchOpen ? 'opacity-0 md:opacity-100' : 'opacity-100'}`}>
                             {navLinks.map((link) => {
-                                const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
-                                return (
-                                    <Link
-                                        key={link.name}
-                                        href={link.href} prefetch={true}
-                                        className={`text-sm tracking-wide transition-all duration-300 relative py-2 font-medium ${isActive ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                                            }`}
-                                    >
-                                        {link.name}
-                                        {isActive && (
-                                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground rounded-t-full"></span>
-                                        )}
-                                    </Link>
-                                );
-                            })}
+                        const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+                        const Icon = link.icon;
+                        return (
+                            <Link
+                                key={link.name}
+                                href={link.href} prefetch={true}
+                                className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-all duration-300 relative group ${
+                                    isActive ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                                }`}
+                            >
+                                <div className="relative flex items-center justify-center">
+                                    <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "fill-current scale-110" : "group-hover:scale-110 group-active:scale-95"}`} />
+                                    {isActive && (
+                                        <div className="absolute -inset-1 bg-gray-900/10 dark:bg-white/10 rounded-full blur-md -z-10" />
+                                    )}
+                                </div>
+                                <span className={`text-[10px] font-medium tracking-wide transition-all ${isActive ? 'opacity-100' : 'opacity-70'}`}>{link.name}</span>
+                                {isActive && (
+                                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gray-900 dark:bg-white rounded-b-full shadow-[0_0_8px_currentColor]"></div>
+                                )}
+                            </Link>
+                        );
+                    })}
+                    {/* Mobile Search Button */}
+                    <button
+                        onClick={() => {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            setTimeout(() => {
+                                setIsSearchOpen(true);
+                                inputRef.current?.focus();
+                            }, 300);
+                        }}
+                        className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-all duration-300 relative group ${
+                            isSearchOpen ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                        }`}
+                    >
+                        <div className="relative flex items-center justify-center">
+                            <Search className={`w-5 h-5 transition-transform duration-300 ${isSearchOpen ? "stroke-[2.5] scale-110" : "group-hover:scale-110 group-active:scale-95"}`} />
+                            {isSearchOpen && (
+                                <div className="absolute -inset-1 bg-gray-900/10 dark:bg-white/10 rounded-full blur-md -z-10" />
+                            )}
+                        </div>
+                        <span className={`text-[10px] font-medium tracking-wide transition-all ${isSearchOpen ? 'opacity-100' : 'opacity-70'}`}>Search</span>
+                        {isSearchOpen && (
+                            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gray-900 dark:bg-white rounded-b-full shadow-[0_0_8px_currentColor]"></div>
+                        )}
+                    </button>
                         </div>
 
                         {/* Actions */}
                         <div className="flex items-center space-x-2 md:space-x-3 lg:space-x-4 shrink-0 h-full">
                             {/* Search Container */}
                             <div className="relative flex items-center" ref={searchRef}>
-                                <div className={`flex items-center overflow-hidden transition-all duration-300 ease-in-out bg-gray-100/50 dark:bg-white/5 border border-transparent rounded-full ${isSearchOpen ? 'w-[200px] sm:w-[300px] md:w-[340px] px-3 py-1.5 border-gray-200 dark:border-white/10' : 'w-8 h-8 sm:w-10 sm:h-10 justify-center'}`}>
+                                <div className={`flex items-center overflow-hidden transition-all duration-300 ease-in-out bg-gray-100/50 dark:bg-white/5 border border-transparent rounded-full ${isSearchOpen ? 'absolute right-0 top-1/2 -translate-y-1/2 w-[calc(100vw-32px)] sm:w-[300px] md:w-[340px] px-3 py-1.5 border-gray-200 dark:border-white/10 z-50 bg-white dark:bg-zinc-900' : 'relative w-8 h-8 sm:w-10 sm:h-10 justify-center'}`}>
                                     <button
                                         onClick={() => setIsSearchOpen(true)}
                                         className={`text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors flex-shrink-0 ${!isSearchOpen ? 'w-full h-full flex items-center justify-center' : ''}`}
@@ -247,7 +279,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
 
                                 {/* Dropdown */}
                                 {isSearchOpen && (
-                                    <div className="absolute top-full right-0 mt-3 w-[100vw] sm:w-[340px] md:w-[400px] bg-white/90 dark:bg-zinc-900/95 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 max-h-[80vh] sm:max-h-[60vh] overflow-y-auto right-[-1rem] sm:right-0">
+                                    <div className="absolute top-full right-0 mt-3 w-[calc(100vw-32px)] sm:w-[340px] md:w-[400px] bg-white/90 dark:bg-zinc-900/95 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 max-h-[80vh] sm:max-h-[60vh] overflow-y-auto right-[-1rem] sm:right-0">
                                         <div className="p-2">
                                             {!searchQuery.trim() ? (
                                                 <div className="space-y-4">
@@ -346,7 +378,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                             </div>
                             <UserMenu />
 
-                            <div className="relative flex items-center justify-center">
+                            <div className="relative">
                                 <button
                                     onClick={() => setMenuOpen(!menuOpen)}
                                     className="p-1.5 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors hidden md:flex items-center justify-center"
@@ -369,8 +401,6 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                     </div>
                 </div>
             </nav>
-            {/* Spacer for fixed top navbar */}
-            <div className={`h-16 ${isMobileReels ? "hidden md:block" : "block"}`}></div>
 
             {/* Mobile Bottom Navigation */}
             <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl border-t border-gray-200 dark:border-white/10 pb-safe shadow-[0_-8px_30px_rgb(0,0,0,0.1)] dark:shadow-[0_-8px_30px_rgb(0,0,0,0.3)]">
@@ -387,18 +417,42 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                 }`}
                             >
                                 <div className="relative flex items-center justify-center">
-                                    <Icon className={`w-[22px] h-[22px] transition-transform duration-300 ${isActive ? "fill-current scale-110" : "group-hover:scale-110 group-active:scale-95"}`} />
+                                    <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "fill-current scale-110" : "group-hover:scale-110 group-active:scale-95"}`} />
                                     {isActive && (
                                         <div className="absolute -inset-1 bg-gray-900/10 dark:bg-white/10 rounded-full blur-md -z-10" />
                                     )}
                                 </div>
-                                <span className={`text-[10px] font-medium tracking-wide transition-all ${isActive ? 'opacity-100 font-semibold' : 'opacity-80'}`}>{link.name}</span>
+                                <span className={`text-[10px] font-medium tracking-wide transition-all ${isActive ? 'opacity-100' : 'opacity-70'}`}>{link.name}</span>
                                 {isActive && (
                                     <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gray-900 dark:bg-white rounded-b-full shadow-[0_0_8px_currentColor]"></div>
                                 )}
                             </Link>
                         );
                     })}
+                    {/* Mobile Search Button */}
+                    <button
+                        onClick={() => {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            setTimeout(() => {
+                                setIsSearchOpen(true);
+                                inputRef.current?.focus();
+                            }, 300);
+                        }}
+                        className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-all duration-300 relative group ${
+                            isSearchOpen ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                        }`}
+                    >
+                        <div className="relative flex items-center justify-center">
+                            <Search className={`w-5 h-5 transition-transform duration-300 ${isSearchOpen ? "stroke-[2.5] scale-110" : "group-hover:scale-110 group-active:scale-95"}`} />
+                            {isSearchOpen && (
+                                <div className="absolute -inset-1 bg-gray-900/10 dark:bg-white/10 rounded-full blur-md -z-10" />
+                            )}
+                        </div>
+                        <span className={`text-[10px] font-medium tracking-wide transition-all ${isSearchOpen ? 'opacity-100' : 'opacity-70'}`}>Search</span>
+                        {isSearchOpen && (
+                            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gray-900 dark:bg-white rounded-b-full shadow-[0_0_8px_currentColor]"></div>
+                        )}
+                    </button>
                 </div>
             </nav>
         </>

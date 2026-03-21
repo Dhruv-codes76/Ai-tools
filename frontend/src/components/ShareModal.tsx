@@ -146,7 +146,7 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
 
             <div
                 ref={modalRef}
-                className="relative bg-card/95 backdrop-blur-2xl border border-border/50 w-full max-w-md rounded-3xl shadow-2xl animate-slide-up overflow-hidden z-10 flex flex-col max-h-[90vh]"
+                className="relative bg-white/10 backdrop-blur-xl border border-white/10 w-full max-w-md rounded-[24px] shadow-2xl animate-slide-up overflow-hidden z-10 flex flex-col max-h-[90vh]"
             >
                 <div className="flex items-center justify-between p-5 border-b border-white/5 bg-black/40 shrink-0">
                     <h3 className="font-bold text-lg tracking-tight text-white">Share Article</h3>
@@ -243,7 +243,7 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
                             <div className="absolute inset-0 z-10 bg-gradient-to-t from-black via-black/80 to-transparent" />
 
                             <div className="relative z-20 p-5 h-full flex flex-col justify-end w-full">
-                                <h4 className="text-white font-bold text-lg leading-snug drop-shadow-lg line-clamp-3 mb-3 bg-black/40 backdrop-blur-sm p-2 rounded-lg inline-block">
+                                <h4 className="text-white font-bold text-xl leading-tight drop-shadow-md line-clamp-4 mb-4">
                                     {title}
                                 </h4>
 

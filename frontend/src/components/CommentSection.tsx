@@ -35,7 +35,7 @@ export default function CommentSection({ articleId }: { articleId: string }) {
     };
 
     useEffect(() => {
-        fetchComments();
+        fetchComments(); // eslint-disable-line react-hooks/exhaustive-deps
 
         // Listen for new comments on the base table
         const channel = supabase
@@ -50,7 +50,7 @@ export default function CommentSection({ articleId }: { articleId: string }) {
                 },
                 () => {
                     // Re-fetch to get the joined profile data
-                    fetchComments();
+                    fetchComments(); // eslint-disable-line react-hooks/exhaustive-deps
                 }
             )
             .subscribe();

@@ -50,7 +50,7 @@ export default function UserMenu() {
         };
     }, [menuOpen]);
 
-    // unused router removed
+    // const router = import("next/navigation").then(m => m.useRouter());
     const handleLogin = async () => {
         window.location.href = "/login";
         return;

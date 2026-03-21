@@ -24,7 +24,7 @@ export default function ReelComments({ newsId }: { newsId: string }) {
 
     useEffect(() => {
         fetchUser();
-        fetchComments();
+        fetchComments(); // eslint-disable-line react-hooks/exhaustive-deps
 
         const channel = supabase
             .channel(`public:comments:news_id=eq.${newsId}`)
