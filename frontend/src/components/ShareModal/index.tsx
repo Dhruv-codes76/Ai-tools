@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { X, Copy, Download, MessageCircle, Share2, Check, ExternalLink } from "lucide-react";
+import { X, Copy, Download, MessageCircle, Share2, Check, ExternalLink, Loader2 } from "lucide-react";
 import { toPng, toBlob } from 'html-to-image';
 import Logo from "../Logo";
 
@@ -18,6 +18,8 @@ type ShareModalProps = {
 export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: ShareModalProps) {
     const [copied, setCopied] = useState(false);
     const [isSharing, setIsSharing] = useState(false);
+    const [preloadedFile, setPreloadedFile] = useState<File | null>(null);
+    const [loadingAction, setLoadingAction] = useState<'whatsapp' | 'native' | 'download' | 'copy' | null>(null);
     const modalRef = useRef<HTMLDivElement>(null);
     const previewRef = useRef<HTMLDivElement>(null);
     const [isMounted, setIsMounted] = useState(false);
@@ -29,13 +31,36 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = "hidden";
+            // Pre-generate background image
+            setPreloadedFile(null);
+            setTimeout(async () => {
+                if (!previewRef.current) return;
+                try {
+                    const blob = await toBlob(previewRef.current, {
+                        cacheBust: true,
+                        pixelRatio: 2,
+                        style: {
+                            transform: 'scale(1)',
+                            transformOrigin: 'top left',
+                            background: '#0a0a0a',
+                            margin: '0',
+                        }
+                    });
+                    if (blob) {
+                        setPreloadedFile(new File([blob], `AI_Portal_${title.substring(0, 15).replace(/\s+/g, '_')}.png`, { type: 'image/png' }));
+                    }
+                } catch (err) {
+                    console.error('Error preloading image blob:', err);
+                }
+            }, 50); // Small delay to ensure the DOM is rendered before capture
         } else {
             document.body.style.overflow = "";
+            setPreloadedFile(null);
         }
         return () => {
             document.body.style.overflow = "";
         };
-    }, [isOpen]);
+    }, [isOpen, title]);
 
     if (!isOpen || !isMounted) return null;
 
@@ -46,16 +71,16 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
     };
 
     const generateImageFile = async (): Promise<File | null> => {
+        if (preloadedFile) return preloadedFile;
         if (!previewRef.current) return null;
         try {
-            // Use scale to improve quality, and ensure fonts/images are loaded
             const blob = await toBlob(previewRef.current, {
                 cacheBust: true,
                 pixelRatio: 2,
                 style: {
                     transform: 'scale(1)',
                     transformOrigin: 'top left',
-                    background: '#0a0a0a', // Explicit solid background
+                    background: '#0a0a0a',
                     margin: '0',
                 }
             });
@@ -69,6 +94,7 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
 
     const handleWhatsApp = async () => {
         setIsSharing(true);
+        setLoadingAction('whatsapp');
         try {
             const file = await generateImageFile();
             if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -85,11 +111,13 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(`${title}\n\n${url}`)}`, '_blank');
         } finally {
             setIsSharing(false);
+            setLoadingAction(null);
         }
     };
 
     const handleNativeShare = async () => {
         setIsSharing(true);
+        setLoadingAction('native');
         try {
             const file = await generateImageFile();
             if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -110,30 +138,31 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
             console.error("Native share failed", err);
         } finally {
             setIsSharing(false);
+            setLoadingAction(null);
         }
     };
 
     const handleDownload = async () => {
-        if (!previewRef.current) return;
         setIsSharing(true);
-
+        setLoadingAction('download');
         try {
-            const dataUrl = await toPng(previewRef.current, {
-                cacheBust: true,
-                pixelRatio: 2,
-                style: {
-                    transform: 'scale(1)',
-                    background: '#0a0a0a',
-                }
-            });
+            let fileToDownload = preloadedFile;
+            if (!fileToDownload) {
+               fileToDownload = await generateImageFile();
+            }
+            if (!fileToDownload) return;
+
+            const dataUrl = URL.createObjectURL(fileToDownload);
             const link = document.createElement('a');
             link.download = `AI_Portal_${title.substring(0, 15).replace(/\s+/g, '_')}.png`;
             link.href = dataUrl;
             link.click();
+            URL.revokeObjectURL(dataUrl);
         } catch (err) {
             console.error('Error generating image:', err);
         } finally {
             setIsSharing(false);
+            setLoadingAction(null);
         }
     };
 
@@ -221,7 +250,7 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
                                                 <Logo size="lg" disableLink={true} />
                                             </div>
                                         </div>
-                                        <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '28px', fontWeight: 600 }}>ai-portal.app</span>
+                                        <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '28px', fontWeight: 600 }}>aiportalweekly.com</span>
                                     </div>
                                 </div>
                             </div>
@@ -258,30 +287,30 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
                     </div>
 
                     <div className="grid grid-cols-4 gap-2 sm:gap-4 w-full px-2">
-                        <button onClick={handleWhatsApp} disabled={isSharing} className="flex flex-col items-center gap-3 group disabled:opacity-50">
-                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 text-emerald-400 flex items-center justify-center group-hover:from-emerald-500 group-hover:to-emerald-400 group-hover:text-white transition-all duration-300 shadow-[0_4px_12px_rgba(16,185,129,0.1)] group-hover:shadow-[0_8px_20px_rgba(16,185,129,0.3)] border border-emerald-500/30 group-hover:border-transparent group-active:scale-95">
-                                <MessageCircle className="w-6 h-6" />
+                        <button onClick={handleWhatsApp} disabled={isSharing || loadingAction !== null} className="flex flex-col items-center gap-3 group disabled:opacity-50">
+                            <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md text-white/90 flex items-center justify-center hover:bg-white/20 hover:text-white transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)] border border-white/10 hover:border-white/30 group-active:scale-95">
+                                {loadingAction === "whatsapp" ? <Loader2 className="w-6 h-6 animate-spin" /> : <MessageCircle className="w-6 h-6" />}
                             </div>
                             <span className="text-xs font-medium text-white/70 group-hover:text-white transition-colors">WhatsApp</span>
                         </button>
 
-                        <button onClick={handleCopy} disabled={isSharing} className="flex flex-col items-center gap-3 group disabled:opacity-50">
-                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 text-blue-400 flex items-center justify-center group-hover:from-blue-500 group-hover:to-blue-400 group-hover:text-white transition-all duration-300 shadow-[0_4px_12px_rgba(59,130,246,0.1)] group-hover:shadow-[0_8px_20px_rgba(59,130,246,0.3)] border border-blue-500/30 group-hover:border-transparent group-active:scale-95">
-                                {copied ? <Check className="w-6 h-6" /> : <Copy className="w-6 h-6" />}
+                        <button onClick={handleCopy} disabled={isSharing || loadingAction !== null} className="flex flex-col items-center gap-3 group disabled:opacity-50">
+                            <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md text-white/90 flex items-center justify-center hover:bg-white/20 hover:text-white transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)] border border-white/10 hover:border-white/30 group-active:scale-95">
+                                {loadingAction === "copy" ? <Loader2 className="w-6 h-6 animate-spin" /> : (copied ? <Check className="w-6 h-6" /> : <Copy className="w-6 h-6" />)}
                             </div>
                             <span className="text-xs font-medium text-white/70 group-hover:text-white transition-colors">{copied ? "Copied" : "Copy"}</span>
                         </button>
 
-                        <button onClick={handleDownload} disabled={isSharing} className="flex flex-col items-center gap-3 group disabled:opacity-50">
-                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-purple-600/10 text-purple-400 flex items-center justify-center group-hover:from-purple-500 group-hover:to-purple-400 group-hover:text-white transition-all duration-300 shadow-[0_4px_12px_rgba(168,85,247,0.1)] group-hover:shadow-[0_8px_20px_rgba(168,85,247,0.3)] border border-purple-500/30 group-hover:border-transparent group-active:scale-95">
-                                <Download className="w-6 h-6" />
+                        <button onClick={handleDownload} disabled={isSharing || loadingAction !== null} className="flex flex-col items-center gap-3 group disabled:opacity-50">
+                            <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md text-white/90 flex items-center justify-center hover:bg-white/20 hover:text-white transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)] border border-white/10 hover:border-white/30 group-active:scale-95">
+                                {loadingAction === "download" ? <Loader2 className="w-6 h-6 animate-spin" /> : <Download className="w-6 h-6" />}
                             </div>
                             <span className="text-xs font-medium text-white/70 group-hover:text-white transition-colors">Save</span>
                         </button>
 
-                        <button onClick={handleNativeShare} disabled={isSharing} className="flex flex-col items-center gap-3 group disabled:opacity-50">
-                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 text-indigo-400 flex items-center justify-center group-hover:from-indigo-500 group-hover:to-indigo-400 group-hover:text-white transition-all duration-300 shadow-[0_4px_12px_rgba(99,102,241,0.1)] group-hover:shadow-[0_8px_20px_rgba(99,102,241,0.3)] border border-indigo-500/30 group-hover:border-transparent group-active:scale-95">
-                                <Share2 className="w-6 h-6" />
+                        <button onClick={handleNativeShare} disabled={isSharing || loadingAction !== null} className="flex flex-col items-center gap-3 group disabled:opacity-50">
+                            <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md text-white/90 flex items-center justify-center hover:bg-white/20 hover:text-white transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)] border border-white/10 hover:border-white/30 group-active:scale-95">
+                                {loadingAction === "native" ? <Loader2 className="w-6 h-6 animate-spin" /> : <Share2 className="w-6 h-6" />}
                             </div>
                             <span className="text-xs font-medium text-white/70 group-hover:text-white transition-colors">More</span>
                         </button>
@@ -290,7 +319,7 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
 
                 {/* Secondary Action / Link preview */}
                 <div className="p-4 bg-white/5 border-t border-white/5 shrink-0">
-                    <div className="flex items-center justify-between gap-3 px-4 py-3 bg-black/40 rounded-xl border border-white/10 overflow-hidden">
+                    <div className="flex items-center justify-between gap-3 px-4 py-3 bg-black/60 rounded-xl border border-white/10 overflow-hidden">
                         <span className="text-xs text-white/50 truncate font-mono">{url.replace(/^https?:\/\//, '')}</span>
                         <a
                             href={url}
