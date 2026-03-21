@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Image as ImageIcon, Bookmark, Share2 } from "lucide-react";
 import { useState } from "react";
-import ShareModal from "./ShareModal";
+import ShareModal from "../ShareModal";
 
 interface NewsItem {
     _id: string;

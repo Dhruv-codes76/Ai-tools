@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { X, Copy, Download, MessageCircle, Share2, Check, ExternalLink } from "lucide-react";
 import { toPng, toBlob } from 'html-to-image';
-import Logo from "./Logo";
+import Logo from "../Logo";
 
 type ShareModalProps = {
     isOpen: boolean;

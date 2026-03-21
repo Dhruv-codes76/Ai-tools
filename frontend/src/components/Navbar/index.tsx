@@ -3,11 +3,11 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ThemeToggle } from "./ThemeToggle";
-import UserMenu from "./UserMenu";
+import { ThemeToggle } from "../ThemeToggle";
+import UserMenu from "../UserMenu";
 import { useEffect, useState, useRef, useMemo } from "react";
 import { Home, Newspaper, Wrench, Menu, Search, X, Clock, TrendingUp } from "lucide-react";
-import Logo from "./Logo";
+import Logo from "../Logo";
 
 export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
     const pathname = usePathname();
