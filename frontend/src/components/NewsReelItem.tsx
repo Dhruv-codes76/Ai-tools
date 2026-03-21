@@ -51,14 +51,27 @@ export default function NewsReelItem({ news, isActive, handleInteraction, isInte
             <div className="relative w-full h-full bg-background overflow-hidden flex flex-col justify-end">
 
                 {/* Full Screen Background Image */}
-                <div className="absolute inset-0 z-0 bg-black">
+                <div className="absolute inset-0 z-0 bg-black flex items-center justify-center overflow-hidden">
                     {news.featuredImage ? (
-                        <img
-                            src={news.featuredImage}
-                            alt=""
-                            className={`w-full h-full object-cover object-center transition-transform duration-[40s] ease-out ${isActive && !isInteracting ? 'scale-110' : 'scale-100'}`} // Subtle zoom effect
-                            loading={isActive ? "eager" : "lazy"}
-                        />
+                        <>
+                            {/* Fallback blurred layer */}
+                            <img
+                                src={news.featuredImage}
+                                alt=""
+                                className={`absolute inset-0 w-full h-full object-cover z-0 blur-[25px] transition-transform duration-[40s] ease-out ${isActive && !isInteracting ? 'scale-110' : 'scale-100'}`}
+                                loading={isActive ? "eager" : "lazy"}
+                            />
+                            {/* Overlay to increase text readability over the bright blurred background */}
+                            <div className="absolute inset-0 z-0 bg-black/40 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]"></div>
+
+                            {/* Primary image centered and contained */}
+                            <img
+                                src={news.featuredImage}
+                                alt=""
+                                className={`relative z-10 w-full h-full object-contain transition-transform duration-[40s] ease-out ${isActive && !isInteracting ? 'scale-110' : 'scale-100'}`}
+                                loading={isActive ? "eager" : "lazy"}
+                            />
+                        </>
                     ) : (
                         <div className="w-full h-full bg-gradient-to-br from-gray-900 to-black"></div>
                     )}
