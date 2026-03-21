@@ -225,7 +225,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                     <Link
                                         key={link.name}
                                         href={link.href} prefetch={true}
-                                        className={`text-sm tracking-wide transition-all duration-300 relative py-2 font-medium ${isActive ? "text-gray-900 dark:text-white" : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                                        className={`text-sm tracking-wide transition-all duration-300 relative py-2 font-medium ${isActive ? "text-black dark:text-white" : "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
                                             }`}
                                     >
                                         {link.name}
@@ -302,7 +302,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                 {isSearchOpen && (
                     <div
                         ref={dropdownRef}
-                        className="absolute top-full left-0 w-full bg-white dark:bg-zinc-900/95 backdrop-blur-2xl border-b border-gray-200 dark:border-zinc-800 shadow-[0_10px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.4)] animate-in fade-in slide-in-from-top-4 duration-300 z-40 overflow-hidden"
+                        className="absolute top-full left-0 w-full bg-white dark:bg-zinc-900/95 backdrop-blur-2xl border-b border-gray-200 dark:border-zinc-800 shadow-lg dark:shadow-[0_10px_40px_rgba(0,0,0,0.4)] animate-in fade-in slide-in-from-top-4 duration-300 z-40 overflow-hidden"
                     >
                         <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 max-h-[70vh] overflow-y-auto">
                             {!debouncedQuery.trim() ? (
@@ -372,12 +372,12 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
 
                                     {/* Search Results */}
                                     {searchResults.length > 0 ? (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+                                        <div className="flex flex-col gap-1">
                                             {searchResults.map((item) => (
                                                 <button
                                                     key={item._id || item.slug}
                                                     onClick={() => handleSearchSelect(item.title || item.name, `/news/${item.slug}`)}
-                                                    className="w-full text-left p-3 sm:p-4 hover:bg-gray-50 dark:hover:bg-white/5 premium-active border border-transparent hover:border-gray-200 dark:hover:border-white/10 rounded-2xl transition-all duration-300 group flex items-start space-x-4"
+                                                    className="w-full text-left p-3 sm:p-4 hover:bg-gray-50 dark:hover:bg-white/5 premium-active border-b border-gray-100 last:border-b-0 dark:border-white/10 dark:last:border-b-0 transition-all duration-300 group flex items-start space-x-4"
                                                 >
                                                     <div className="flex-shrink-0 mt-1 w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                                                         <Newspaper className="w-4 h-4 text-blue-500 dark:text-blue-400" />
@@ -422,7 +422,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                 key={link.name}
                                 href={link.href} prefetch={true}
                                 className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-all duration-300 relative group ${
-                                    isActive ? "text-gray-900 dark:text-white" : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                                    isActive ? "text-black dark:text-white" : "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
                                 }`}
                             >
                                 <div className="relative flex items-center justify-center">
@@ -448,7 +448,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                             }, 300);
                         }}
                         className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-all duration-300 relative group ${
-                            isSearchOpen ? "text-gray-900 dark:text-white" : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                            isSearchOpen ? "text-black dark:text-white" : "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
                         }`}
                     >
                         <div className="relative flex items-center justify-center">

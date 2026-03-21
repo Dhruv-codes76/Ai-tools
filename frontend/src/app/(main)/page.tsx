@@ -37,7 +37,7 @@ export default async function Home() {
           </Link>
           <Link
             href="/tools"
-            className="flex flex-1 items-center justify-center px-4 sm:px-8 py-4 sm:py-5 rounded-2xl bg-background/50 backdrop-blur-md text-foreground font-semibold text-center uppercase tracking-widest text-xs sm:text-sm border border-border shadow-sm transition-all duration-300 hover:bg-muted/50 hover:shadow-md hover:-translate-y-1 hover:scale-105 active:scale-95"
+            className="flex flex-1 items-center justify-center px-4 sm:px-8 py-4 sm:py-5 rounded-2xl bg-muted/80 dark:bg-white/10 backdrop-blur-md text-foreground font-semibold text-center uppercase tracking-widest text-xs sm:text-sm border border-border/50 dark:border-white/10 shadow-sm transition-all duration-300 hover:bg-muted dark:hover:bg-white/20 hover:shadow-md hover:-translate-y-1 hover:scale-105 active:scale-95"
           >
             Explore Tools
           </Link>
