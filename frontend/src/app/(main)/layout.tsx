@@ -7,11 +7,13 @@ export default function MainLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Removed global max-width and horizontal padding to allow full-width mobile reels
+  // Components that need constraints (like Home/Desktop News) must now apply them internally.
   return (
     <>
       <DynamicBackground />
       <Navbar />
-      <main className="flex-grow z-10 relative px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full pb-20 md:pb-0">
+      <main className="flex-grow z-10 relative w-full h-full pb-16 md:pb-0">
         {children}
       </main>
       <Footer />

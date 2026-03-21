@@ -68,7 +68,7 @@ export default function MobileReelsView({ newsItems }: { newsItems: any[] }) {
 
     if (!newsItems || newsItems.length === 0) {
         return (
-            <div className="flex items-center justify-center h-[calc(100vh-64px)] w-full">
+            <div className="flex items-center justify-center h-[100dvh] w-screen bg-black">
                  <EmptyState message="No transmissions available." />
             </div>
         );
@@ -77,7 +77,7 @@ export default function MobileReelsView({ newsItems }: { newsItems: any[] }) {
     return (
         <div
             ref={containerRef}
-            className="h-[100dvh] w-full overflow-y-scroll snap-y snap-mandatory bg-black hide-scrollbar"
+            className="h-[100dvh] w-screen overflow-y-scroll snap-y snap-mandatory bg-black hide-scrollbar fixed top-0 left-0 right-0 bottom-0 z-0 m-0 p-0"
             onScroll={handleInteraction}
             onTouchStart={handleInteraction}
             onMouseDown={handleInteraction}
@@ -91,7 +91,7 @@ export default function MobileReelsView({ newsItems }: { newsItems: any[] }) {
                 <div
                     key={item._id || item.id || index}
                     data-index={index}
-                    className="h-full w-full snap-start snap-always relative flex items-center justify-center"
+                    className="h-[100dvh] w-screen snap-start snap-always relative flex items-center justify-center m-0 p-0 overflow-hidden"
                     onDoubleClick={() => handleDoubleTap(item.slug)}
                 >
                     <NewsReelItem
