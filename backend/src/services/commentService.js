@@ -4,6 +4,7 @@ const { generateAnonymousId } = require('../utils/hashIp');
 const AppError = require('../utils/AppError');
 
 const BLACKLIST = ['casino', 'loan', 'crypto', 'adult', 'bet'];
+const BLACKLIST_REGEX = new RegExp(BLACKLIST.join('|'), 'i');
 
 /**
  * Enterprise Service for User Comments
@@ -13,10 +14,7 @@ class CommentService {
         if (!text || text.length < 25) throw new AppError('Comment must be at least 25 characters long.', 400);
         if (text.length > 500) throw new AppError('Comment must be no more than 500 characters long.', 400);
 
-        const lowerText = text.toLowerCase();
-        for (const word of BLACKLIST) {
-            if (lowerText.includes(word)) throw new AppError('Comment contains prohibited words.', 400);
-        }
+        if (BLACKLIST_REGEX.test(text)) throw new AppError('Comment contains prohibited words.', 400);
 
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         const urls = text.match(urlRegex) || [];
