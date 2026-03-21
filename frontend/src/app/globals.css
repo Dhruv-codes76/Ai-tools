@@ -58,7 +58,7 @@
   }
 
   p {
-    @apply leading-[1.7];
+    @apply leading-relaxed;
   }
 }
 

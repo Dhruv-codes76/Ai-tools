@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { X, Copy, Download, MessageCircle, Share2, Check, ExternalLink, Loader2 } from "lucide-react";
-import { toPng, toBlob } from 'html-to-image';
+import { toBlob } from 'html-to-image';
 import Logo from "../Logo";
 
 type ShareModalProps = {
@@ -18,7 +18,7 @@ type ShareModalProps = {
 export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: ShareModalProps) {
     const [copied, setCopied] = useState(false);
     const [isSharing, setIsSharing] = useState(false);
-    const [preloadedFile, setPreloadedFile] = useState<File | null>(null);
+
     const [loadingAction, setLoadingAction] = useState<'whatsapp' | 'native' | 'download' | 'copy' | null>(null);
     const modalRef = useRef<HTMLDivElement>(null);
     const previewRef = useRef<HTMLDivElement>(null);
@@ -31,36 +31,13 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = "hidden";
-            // Pre-generate background image
-            setPreloadedFile(null);
-            setTimeout(async () => {
-                if (!previewRef.current) return;
-                try {
-                    const blob = await toBlob(previewRef.current, {
-                        cacheBust: true,
-                        pixelRatio: 2,
-                        style: {
-                            transform: 'scale(1)',
-                            transformOrigin: 'top left',
-                            background: '#0a0a0a',
-                            margin: '0',
-                        }
-                    });
-                    if (blob) {
-                        setPreloadedFile(new File([blob], `AI_Portal_${title.substring(0, 15).replace(/\s+/g, '_')}.png`, { type: 'image/png' }));
-                    }
-                } catch (err) {
-                    console.error('Error preloading image blob:', err);
-                }
-            }, 50); // Small delay to ensure the DOM is rendered before capture
         } else {
             document.body.style.overflow = "";
-            setPreloadedFile(null);
         }
         return () => {
             document.body.style.overflow = "";
         };
-    }, [isOpen, title]);
+    }, [isOpen]);
 
     if (!isOpen || !isMounted) return null;
 
@@ -71,7 +48,6 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
     };
 
     const generateImageFile = async (): Promise<File | null> => {
-        if (preloadedFile) return preloadedFile;
         if (!previewRef.current) return null;
         try {
             const blob = await toBlob(previewRef.current, {
@@ -146,10 +122,7 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
         setIsSharing(true);
         setLoadingAction('download');
         try {
-            let fileToDownload = preloadedFile;
-            if (!fileToDownload) {
-               fileToDownload = await generateImageFile();
-            }
+            const fileToDownload = await generateImageFile();
             if (!fileToDownload) return;
 
             const dataUrl = URL.createObjectURL(fileToDownload);

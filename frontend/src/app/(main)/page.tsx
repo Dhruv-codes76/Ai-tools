@@ -16,7 +16,7 @@ export default async function Home() {
     <div className="min-h-screen flex flex-col items-center selection:bg-foreground selection:text-background">
 
       {/* Editorial Hero Section */}
-      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 lg:pt-32 lg:pb-32">
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-32 lg:pt-40 lg:pb-40">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
           <div className="max-w-4xl">
             <h1 className="font-sans font-bold text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.05] mb-6 text-foreground">
@@ -50,7 +50,7 @@ export default async function Home() {
 
       {/* Main Content Split Layout */}
       <section className="w-full bg-muted/10">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20 pb-32 md:pb-24">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20 pb-32 md:pb-24">
 
           {/* Left Column: Latest News List */}
           <div className="lg:col-span-12">

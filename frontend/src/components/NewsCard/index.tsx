@@ -58,7 +58,7 @@ export default function NewsCard({ news }: { news: NewsItem }) {
                             className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                         />
                         {/* Gradient overlay for premium feel */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
                         </>
                     ) : (
                         <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 transition-transform duration-700 group-hover:scale-[1.03] bg-gradient-to-br from-muted/50 to-background/50">

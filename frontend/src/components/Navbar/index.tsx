@@ -211,9 +211,9 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
             >
                 <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-14 md:h-16 relative">
-                        <Link href="/" className="flex items-center gap-2 md:gap-3 shrink-0 group">
+                        <Link href="/" className="flex items-center justify-center gap-2 md:gap-3 shrink-0 group">
                             <Logo size="lg" variant="icon" animated={true} disableLink={true} className="shrink-0 group-hover:scale-105 transition-transform" />
-                            <span className="font-bold tracking-tight text-lg md:text-xl text-gray-900 dark:text-white transition-colors duration-300 ease-in-out group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                            <span className="font-bold tracking-tight text-lg md:text-xl text-gray-900 dark:text-white transition-colors duration-300 ease-in-out group-hover:text-blue-600 dark:group-hover:text-blue-400 leading-none flex items-center">
                                 AI Portal
                             </span>
                         </Link>
@@ -303,7 +303,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                 {isSearchOpen && (
                     <div
                         ref={dropdownRef}
-                        className="absolute top-full left-0 w-full bg-white dark:bg-gray-900 shadow-lg backdrop-blur-2xl border-b border-gray-200 dark:border-zinc-800 dark:shadow-[0_10px_40px_rgba(0,0,0,0.4)] rounded-b-2xl animate-in fade-in slide-in-from-top-4 duration-300 z-40 overflow-hidden"
+                        className="absolute top-full left-0 w-full bg-white dark:bg-gray-900 shadow-xl backdrop-blur-2xl border-b border-gray-200 dark:border-zinc-800 dark:shadow-[0_10px_40px_rgba(0,0,0,0.4)] rounded-b-2xl animate-in fade-in slide-in-from-top-4 duration-300 z-40 overflow-hidden"
                     >
                         <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 max-h-[70vh] overflow-y-auto">
                             {!debouncedQuery.trim() ? (
@@ -425,7 +425,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                 <div className="relative flex items-center justify-center">
                                     <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "fill-current scale-110" : "group-hover:scale-110 premium-active"}`} />
                                     {isActive && (
-                                        <div className="absolute -inset-1 bg-gray-900/10 dark:bg-white/10 rounded-full blur-md -z-10" />
+                                        <div className="absolute -inset-1 bg-gray-200/50 dark:bg-white/10 rounded-full blur-sm -z-10" />
                                     )}
                                 </div>
                                 <span className={`text-[10px] font-medium tracking-wide transition-all ${isActive ? 'opacity-100' : 'opacity-70'}`}>{link.name}</span>
@@ -451,7 +451,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                         <div className="relative flex items-center justify-center">
                             <Search className={`w-5 h-5 transition-transform duration-300 ${isSearchOpen ? "stroke-[2.5] scale-110" : "group-hover:scale-110 premium-active"}`} />
                             {isSearchOpen && (
-                                <div className="absolute -inset-1 bg-gray-900/10 dark:bg-white/10 rounded-full blur-md -z-10" />
+                                <div className="absolute -inset-1 bg-gray-200/50 dark:bg-white/10 rounded-full blur-sm -z-10" />
                             )}
                         </div>
                         <span className={`text-[10px] font-medium tracking-wide transition-all ${isSearchOpen ? 'opacity-100' : 'opacity-70'}`}>Search</span>
