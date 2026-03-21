@@ -225,7 +225,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                     <Link
                                         key={link.name}
                                         href={link.href} prefetch={true}
-                                        className={`text-sm tracking-wide transition-all duration-300 relative py-2 font-medium ${isActive ? "text-black dark:text-white" : "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
+                                        className={`text-sm tracking-wide transition-all duration-300 relative py-2 font-medium ${isActive ? "text-black font-bold dark:text-white" : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
                                             }`}
                                     >
                                         {link.name}
@@ -422,7 +422,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                 key={link.name}
                                 href={link.href} prefetch={true}
                                 className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-all duration-300 relative group ${
-                                    isActive ? "text-black dark:text-white" : "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
+                                    isActive ? "text-black font-bold dark:text-white" : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
                                 }`}
                             >
                                 <div className="relative flex items-center justify-center">
@@ -433,7 +433,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                 </div>
                                 <span className={`text-[10px] font-medium tracking-wide transition-all ${isActive ? 'opacity-100' : 'opacity-70'}`}>{link.name}</span>
                                 {isActive && (
-                                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gray-900 dark:bg-white rounded-b-full shadow-[0_0_8px_currentColor]"></div>
+                                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-black dark:bg-white rounded-b-full shadow-[0_0_8px_currentColor]"></div>
                                 )}
                             </Link>
                         );
@@ -448,7 +448,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                             }, 300);
                         }}
                         className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-all duration-300 relative group ${
-                            isSearchOpen ? "text-black dark:text-white" : "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white"
+                            isSearchOpen ? "text-black font-bold dark:text-white" : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
                         }`}
                     >
                         <div className="relative flex items-center justify-center">
@@ -459,7 +459,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                         </div>
                         <span className={`text-[10px] font-medium tracking-wide transition-all ${isSearchOpen ? 'opacity-100' : 'opacity-70'}`}>Search</span>
                         {isSearchOpen && (
-                            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gray-900 dark:bg-white rounded-b-full shadow-[0_0_8px_currentColor]"></div>
+                            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-black dark:bg-white rounded-b-full shadow-[0_0_8px_currentColor]"></div>
                         )}
                     </button>
                 </div>
