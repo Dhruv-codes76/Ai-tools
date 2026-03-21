@@ -43,8 +43,8 @@ export default function NewsCard({ news }: { news: NewsItem }) {
     const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/news/${news.slug}` : `/news/${news.slug}`;
 
     return (
-        <article className="group flex flex-col h-full bg-card backdrop-blur-xl rounded-2xl border border-border shadow-sm hover:shadow-md overflow-visible transition-all duration-300 hover:scale-[1.01] hover:bg-white/10 hover:border-white/20 relative">
-            <Link prefetch={true} href={`/news/${news.slug}`} className="flex flex-col h-full rounded-2xl transition-all duration-200 active:scale-[0.98] active:opacity-90 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+        <article className="group flex flex-col h-full bg-card backdrop-blur-xl rounded-2xl border border-border shadow-sm hover:shadow-md overflow-visible transition-all duration-300 hover:-translate-y-1 hover:shadow-lg premium-hover hover:bg-white/10 hover:border-white/20 relative">
+            <Link prefetch={true} href={`/news/${news.slug}`} className="flex flex-col h-full rounded-2xl transition-all duration-200 premium-active active:opacity-90 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
 
                 {/* Image Placeholder Container (16:9) */}
                 <div className="relative w-full aspect-[16/9] bg-muted/30 overflow-hidden">
@@ -55,13 +55,13 @@ export default function NewsCard({ news }: { news: NewsItem }) {
                             src={news.image_url || news.featuredImage}
                             alt={news.title}
                             loading="lazy"
-                            className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                         />
                         {/* Gradient overlay for premium feel */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
                         </>
                     ) : (
-                        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 transition-transform duration-700 group-hover:scale-105 bg-gradient-to-br from-muted/50 to-background/50">
+                        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 transition-transform duration-700 group-hover:scale-[1.03] bg-gradient-to-br from-muted/50 to-background/50">
                             <ImageIcon className="w-12 h-12" />
                         </div>
                     )}
