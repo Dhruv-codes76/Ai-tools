@@ -12,7 +12,27 @@ const app = express();
 app.set('trust proxy', 1); // Trust first proxy for rate limiters backing onto Render/Nginx
 app.use(morgan('dev')); // HTTP request logger
 app.use(express.json());
-app.use(cors());
+
+// CORS configuration
+const allowedOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+    : ['http://localhost:3000', 'http://localhost:5173'];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        const isAllowed = allowedOrigins.includes(origin) || allowedOrigins.includes('*');
+
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
 
 // Import routes
 const adminRoutes = require('./routes/adminRoutes');
