@@ -205,6 +205,9 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                             }`}
                                     >
                                         {link.name}
+                                        {isActive && (
+                                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground rounded-t-full"></span>
+                                        )}
                                     </Link>
                                 );
                             })}
@@ -346,7 +349,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                             </div>
                             <UserMenu />
 
-                            <div className="relative">
+                            <div className="relative flex items-center justify-center">
                                 <button
                                     onClick={() => setMenuOpen(!menuOpen)}
                                     className="p-1.5 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors hidden md:flex items-center justify-center"
@@ -369,6 +372,8 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                     </div>
                 </div>
             </nav>
+            {/* Spacer for fixed top navbar */}
+            <div className={`h-16 ${isMobileReels ? "hidden md:block" : "block"}`}></div>
 
             {/* Mobile Bottom Navigation */}
             <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl border-t border-gray-200 dark:border-white/10 pb-safe shadow-[0_-8px_30px_rgb(0,0,0,0.1)] dark:shadow-[0_-8px_30px_rgb(0,0,0,0.3)]">
@@ -385,12 +390,12 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                 }`}
                             >
                                 <div className="relative flex items-center justify-center">
-                                    <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "fill-current scale-110" : "group-hover:scale-110 group-active:scale-95"}`} />
+                                    <Icon className={`w-[22px] h-[22px] transition-transform duration-300 ${isActive ? "fill-current scale-110" : "group-hover:scale-110 group-active:scale-95"}`} />
                                     {isActive && (
                                         <div className="absolute -inset-1 bg-gray-900/10 dark:bg-white/10 rounded-full blur-md -z-10" />
                                     )}
                                 </div>
-                                <span className={`text-[10px] font-medium tracking-wide transition-all ${isActive ? 'opacity-100' : 'opacity-70'}`}>{link.name}</span>
+                                <span className={`text-[10px] font-medium tracking-wide transition-all ${isActive ? 'opacity-100 font-semibold' : 'opacity-80'}`}>{link.name}</span>
                                 {isActive && (
                                     <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gray-900 dark:bg-white rounded-b-full shadow-[0_0_8px_currentColor]"></div>
                                 )}

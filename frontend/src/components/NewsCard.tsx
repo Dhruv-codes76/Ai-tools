@@ -43,34 +43,41 @@ export default function NewsCard({ news }: { news: NewsItem }) {
     const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/news/${news.slug}` : `/news/${news.slug}`;
 
     return (
-        <>
-            <article className="group flex flex-col h-full bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300 hover:scale-[1.01] hover:bg-white/10 hover:border-white/20 relative">
-                <Link prefetch={true} href={`/news/${news.slug}`} className="flex flex-col h-full rounded-2xl transition-all duration-200 active:scale-[0.98] active:opacity-90 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+        <article className="group flex flex-col h-full bg-card backdrop-blur-xl rounded-2xl border border-border shadow-sm hover:shadow-md overflow-visible transition-all duration-300 hover:scale-[1.01] hover:bg-white/10 hover:border-white/20 relative">
+            <Link prefetch={true} href={`/news/${news.slug}`} className="flex flex-col h-full rounded-2xl transition-all duration-200 active:scale-[0.98] active:opacity-90 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
 
-                    {/* Image Placeholder Container (16:9) */}
-                    <div className="relative w-full pt-[56.25%] bg-muted/30 overflow-hidden">
-                        {(news.image_url || news.featuredImage) ? (
-                            /* eslint-disable-next-line @next/next/no-img-element */
-                            <img
-                                src={news.image_url || news.featuredImage}
-                                alt={news.title}
-                                loading="lazy"
-                                className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            />
-                        ) : (
-                            <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 transition-transform duration-700 group-hover:scale-105 bg-gradient-to-br from-muted/50 to-background/50">
-                                <ImageIcon className="w-12 h-12" />
-                            </div>
-                        )}
+                {/* Image Placeholder Container (16:9) */}
+                <div className="relative w-full pt-[56.25%] bg-muted/30 overflow-hidden">
+                    {(news.image_url || news.featuredImage) ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                            src={news.image_url || news.featuredImage}
+                            alt={news.title}
+                            loading="lazy"
+                            className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                    ) : (
+                        <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 transition-transform duration-700 group-hover:scale-105 bg-gradient-to-br from-muted/50 to-background/50">
+                            <ImageIcon className="w-12 h-12" />
+                        </div>
+                    )}
 
-                        {/* Minimal Category Badge */}
-                        {news.category && (
-                            <div className="absolute top-4 left-4 z-10">
-                                <span className="bg-black/60 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-sm">
-                                    {news.category}
-                                </span>
-                            </div>
-                        )}
+                    {/* Minimal Category Badge */}
+                    {news.category && (
+                        <div className="absolute top-4 left-4 z-10">
+                            <span className="bg-black/60 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-sm">
+                                {news.category}
+                            </span>
+                        </div>
+                    )}
+                </div>
+
+                {/* Content Container */}
+                <div className="flex flex-col flex-grow p-6 lg:p-8">
+                    <div className="flex justify-between items-center mb-4">
+                        <time className="text-xs tracking-widest text-muted-foreground uppercase font-medium">
+                            {date} • {readingTime}
+                        </time>
                     </div>
 
                     {/* Content Container */}
