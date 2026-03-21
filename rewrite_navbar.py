@@ -1,4 +1,12 @@
+import re
 
+with open('frontend/src/components/Navbar.tsx', 'r') as f:
+    content = f.read()
+
+# Add useDebounce hook implementation at the top level or inside the component
+# Since we need it, let's just use a simple timeout effect inside the component instead of a custom hook file for now to keep it self-contained.
+
+new_component_code = """
 "use client";
 
 import Link from "next/link";
@@ -140,7 +148,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
             if (title.includes(query) || description.includes(query)) return true;
 
             // 2. Split query by spaces and check if all words exist
-            const words = query.split(/\s+/).filter(Boolean);
+            const words = query.split(/\\s+/).filter(Boolean);
             if (words.length > 1) {
                 const allWordsMatch = words.every(word => title.includes(word) || description.includes(word));
                 if (allWordsMatch) return true;
@@ -181,7 +189,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
     // Helper for highlight matching text
     const highlightMatch = (text: string, query: string) => {
         if (!query.trim()) return text;
-        const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')})`, 'gi');
         const parts = text.split(regex);
         return parts.map((part, i) =>
             regex.test(part) ?
@@ -466,3 +474,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
         </>
     );
 }
+"""
+
+with open('frontend/src/components/Navbar.tsx', 'w') as f:
+    f.write(new_component_code)
