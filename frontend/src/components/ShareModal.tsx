@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { X, Copy, Download, MessageCircle, Share2, Check, ExternalLink } from "lucide-react";
 import { toPng, toBlob } from 'html-to-image';
+import Logo from "./Logo";
 
 type ShareModalProps = {
     isOpen: boolean;
@@ -216,11 +217,9 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
                                         paddingTop: '40px'
                                     }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                                            <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                {/* Simple icon or logo placeholder */}
-                                                <div style={{ width: '24px', height: '24px', background: '#000', borderRadius: '4px' }}></div>
+                                            <div style={{ transform: 'scale(1.5)', transformOrigin: 'left center' }}>
+                                                <Logo size="lg" disableLink={true} />
                                             </div>
-                                            <span style={{ color: '#ffffff', fontSize: '32px', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase' }}>AI PORTAL</span>
                                         </div>
                                         <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '28px', fontWeight: 600 }}>ai-portal.app</span>
                                     </div>
@@ -249,10 +248,9 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
                                 </h4>
 
                                 <div className="mt-auto pt-3 border-t border-white/20 flex justify-between items-center w-full">
-                                    <span className="text-white font-bold text-[10px] uppercase tracking-widest flex items-center gap-2">
-                                        <span className="w-4 h-4 rounded-full bg-white inline-block"></span>
-                                        AI Portal
-                                    </span>
+                                    <div>
+                                        <Logo size="sm" disableLink={true} />
+                                    </div>
                                     <span className="text-white/50 text-[10px] font-medium">Read More</span>
                                 </div>
                             </div>

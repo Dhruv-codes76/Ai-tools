@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "./Logo";
 
 export default function Footer() {
     return (
@@ -7,9 +8,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-16">
                     {/* Brand Section */}
                     <div className="col-span-1 md:col-span-2">
-                        <span className="block font-sans font-bold text-2xl tracking-tight text-[#EDEDED] mb-4">
-                            AI MVP
-                        </span>
+                        <div className="mb-4"><Logo size="lg" /></div>
                         <p className="text-[#A1A1A1] text-sm leading-relaxed max-w-sm">
                             Clear, verified AI news and tools. No hype.
                         </p>

@@ -1,4 +1,10 @@
-"use client";
+const fs = require('fs');
+
+const newsCardFile = 'frontend/src/components/NewsCard.tsx';
+let newsCardContent = fs.readFileSync(newsCardFile, 'utf8');
+
+// I'll rewrite the NewsCard to ensure JSX is 100% correct
+const fullNewCard = `"use client";
 
 import Link from "next/link";
 import { Image as ImageIcon, Bookmark, Share2 } from "lucide-react";
@@ -40,11 +46,11 @@ export default function NewsCard({ news }: { news: NewsItem }) {
         setShowShareModal(true);
     };
 
-    const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/news/${news.slug}` : `/news/${news.slug}`;
+    const shareUrl = typeof window !== 'undefined' ? \`\${window.location.origin}/news/\${news.slug}\` : \`/news/\${news.slug}\`;
 
     return (
         <article className="group flex flex-col h-full bg-card backdrop-blur-xl rounded-2xl border border-border shadow-sm hover:shadow-md overflow-visible transition-all duration-300 hover:scale-[1.01] hover:bg-white/10 hover:border-white/20 relative">
-            <Link prefetch={true} href={`/news/${news.slug}`} className="flex flex-col h-full rounded-2xl transition-all duration-200 active:scale-[0.98] active:opacity-90 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <Link prefetch={true} href={\`/news/\${news.slug}\`} className="flex flex-col h-full rounded-2xl transition-all duration-200 active:scale-[0.98] active:opacity-90 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
 
                 {/* Image Placeholder Container (16:9) */}
                 <div className="relative w-full aspect-[16/9] bg-muted/30 overflow-hidden">
@@ -97,10 +103,10 @@ export default function NewsCard({ news }: { news: NewsItem }) {
                         <div className="flex items-center space-x-1 -ml-2">
                             <button
                                 onClick={handleSave}
-                                className={`p-2 rounded-full transition-all duration-200 hover:bg-muted/80 ${isSaved ? 'text-blue-500' : 'text-muted-foreground hover:text-foreground'}`}
+                                className={\`p-2 rounded-full transition-all duration-200 hover:bg-muted/80 \${isSaved ? 'text-blue-500' : 'text-muted-foreground hover:text-foreground'}\`}
                                 aria-label="Save article"
                             >
-                                <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
+                                <Bookmark className={\`w-4 h-4 \${isSaved ? 'fill-current' : ''}\`} />
                             </button>
 
                             <button
@@ -124,4 +130,6 @@ export default function NewsCard({ news }: { news: NewsItem }) {
             />
         </article>
     );
-}
+}`;
+
+fs.writeFileSync(newsCardFile, fullNewCard);

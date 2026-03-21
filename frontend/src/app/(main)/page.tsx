@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import NewsCard from "@/components/NewsCard";
 import ToolCard from "@/components/ToolCard";
 import { getNews, getTools } from "@/lib/api";
+import { Suspense } from "react";
 
 
 export default async function Home() {
@@ -48,7 +49,7 @@ export default async function Home() {
 
       {/* Main Content Split Layout */}
       <section className="w-full bg-muted/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20 pb-32 md:pb-24">
 
           {/* Left Column: Latest News List */}
           <div className="lg:col-span-12">
@@ -60,6 +61,7 @@ export default async function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-in">
+              <Suspense fallback={<><div className="w-full h-80 bg-muted animate-pulse rounded-2xl"></div><div className="w-full h-80 bg-muted animate-pulse rounded-2xl hidden md:block"></div><div className="w-full h-80 bg-muted animate-pulse rounded-2xl hidden lg:block"></div></>}>
               {latestNews && latestNews.length > 0 ? (
                 latestNews.map((news: any) => (
                   <NewsCard key={news._id} news={news} />
@@ -67,6 +69,7 @@ export default async function Home() {
               ) : (
                 <p className="text-muted-foreground py-8 italic font-sans col-span-full text-center">No transmissions currently active.</p>
               )}
+              </Suspense>
             </div>
           </div>
 
@@ -80,6 +83,7 @@ export default async function Home() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 animate-fade-in">
+              <Suspense fallback={<><div className="w-full h-40 bg-muted animate-pulse rounded-2xl"></div><div className="w-full h-40 bg-muted animate-pulse rounded-2xl"></div><div className="w-full h-40 bg-muted animate-pulse rounded-2xl hidden lg:block"></div><div className="w-full h-40 bg-muted animate-pulse rounded-2xl hidden lg:block"></div></>}>
               {latestTools && latestTools.length > 0 ? (
                 latestTools.map((tool: any) => (
                   <ToolCard key={tool._id} tool={tool} />
@@ -87,6 +91,7 @@ export default async function Home() {
               ) : (
                 <p className="text-muted-foreground py-8 italic font-sans col-span-full text-center">Catalog currently unavailable.</p>
               )}
+              </Suspense>
             </div>
           </div>
 

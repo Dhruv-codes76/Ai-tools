@@ -6,6 +6,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import UserMenu from "./UserMenu";
 import { useEffect, useState, useRef, useMemo } from "react";
 import { Home, Newspaper, Wrench, Menu, Search, X, Clock, TrendingUp } from "lucide-react";
+import Logo from "./Logo";
 
 export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
     const pathname = usePathname();
@@ -184,14 +185,10 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                     isVisible ? "translate-y-0" : "-translate-y-full"
                 } ${isMobileReels ? "hidden md:block" : "block"}`}
             >
-                <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-14 md:h-16 relative">
                         {/* Logo */}
-                        <Link href="/" className="flex items-center group shrink-0">
-                            <span className="font-sans font-bold text-lg md:text-xl tracking-tight text-gray-900 dark:text-white transition-transform duration-300 group-hover:scale-[1.02]">
-                                AI Portal
-                            </span>
-                        </Link>
+                        <Logo size="md" className="shrink-0" />
 
                         {/* Desktop Nav - Hide when search is expanded on smaller screens */}
                         <div className={`hidden md:flex space-x-8 lg:space-x-12 items-center absolute left-1/2 transform -translate-x-1/2 transition-opacity duration-300 ${isSearchOpen ? 'opacity-0 md:opacity-100' : 'opacity-100'}`}>

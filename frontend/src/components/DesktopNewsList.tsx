@@ -14,7 +14,7 @@ export default function DesktopNewsList({ newsItems }: { newsItems: any[] }) {
     }
 
     return (
-        <div className="max-w-[900px] mx-auto py-12 px-6">
+        <div className="w-full max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 pb-32 md:pb-12">
             <h1 className="text-4xl font-bold mb-10 tracking-tight text-foreground">
                 Latest Insights
             </h1>
