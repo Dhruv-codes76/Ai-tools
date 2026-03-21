@@ -211,7 +211,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                 <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-14 md:h-16 relative">
                         {/* Logo */}
-                        <Logo size="md" className="shrink-0" />
+                        <Logo size="md" variant="icon" animated={true} className="shrink-0" />
 
                         {/* Desktop Nav - Hide when search is expanded on smaller screens */}
                         <div className={`hidden md:flex space-x-8 lg:space-x-12 items-center absolute left-1/2 transform -translate-x-1/2 transition-opacity duration-300 ${isSearchOpen ? 'opacity-0 md:opacity-100' : 'opacity-100'}`}>
@@ -283,7 +283,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                         <Link
                                             href="/admin/login"
                                             onClick={() => setMenuOpen(false)}
-                                            className="block px-4 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
+                                            className="block px-4 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 premium-active dark:hover:bg-white/5 premium-active transition-colors"
                                         >
                                             Admin Dashboard
                                         </Link>
@@ -319,7 +319,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                                             setSearchQuery(query);
                                                             inputRef.current?.focus();
                                                         }}
-                                                        className="w-full text-left px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-xl transition-all duration-200 flex items-center group"
+                                                        className="w-full text-left px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 premium-active dark:hover:bg-white/5 premium-active rounded-xl transition-all duration-200 flex items-center group"
                                                     >
                                                         <Clock className="w-4 h-4 mr-3 text-gray-400 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors" />
                                                         <span className="truncate flex-1 font-medium">{query}</span>
@@ -347,7 +347,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                                             setSearchQuery(topic);
                                                             inputRef.current?.focus();
                                                         }}
-                                                        className="w-full text-left px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-xl transition-all duration-200 flex items-center group"
+                                                        className="w-full text-left px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 premium-active dark:hover:bg-white/5 premium-active rounded-xl transition-all duration-200 flex items-center group"
                                                     >
                                                         <Search className="w-4 h-4 mr-3 text-gray-400 group-hover:text-rose-500 dark:group-hover:text-rose-400 transition-colors shrink-0" />
                                                         <span className="truncate flex-1 font-medium group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{topic}</span>
@@ -373,7 +373,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                                 <button
                                                     key={item._id || item.slug}
                                                     onClick={() => handleSearchSelect(item.title || item.name, `/news/${item.slug}`)}
-                                                    className="w-full text-left p-3 sm:p-4 hover:bg-gray-50 dark:hover:bg-white/5 border border-transparent hover:border-gray-200 dark:hover:border-white/10 rounded-2xl transition-all duration-300 group flex items-start space-x-4"
+                                                    className="w-full text-left p-3 sm:p-4 hover:bg-gray-50 dark:hover:bg-white/5 premium-active border border-transparent hover:border-gray-200 dark:hover:border-white/10 rounded-2xl transition-all duration-300 group flex items-start space-x-4"
                                                 >
                                                     <div className="flex-shrink-0 mt-1 w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                                                         <Newspaper className="w-4 h-4 text-blue-500 dark:text-blue-400" />
@@ -422,7 +422,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                                 }`}
                             >
                                 <div className="relative flex items-center justify-center">
-                                    <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "fill-current scale-110" : "group-hover:scale-110 group-active:scale-95"}`} />
+                                    <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? "fill-current scale-110" : "group-hover:scale-110 premium-active"}`} />
                                     {isActive && (
                                         <div className="absolute -inset-1 bg-gray-900/10 dark:bg-white/10 rounded-full blur-md -z-10" />
                                     )}
@@ -448,7 +448,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
                         }`}
                     >
                         <div className="relative flex items-center justify-center">
-                            <Search className={`w-5 h-5 transition-transform duration-300 ${isSearchOpen ? "stroke-[2.5] scale-110" : "group-hover:scale-110 group-active:scale-95"}`} />
+                            <Search className={`w-5 h-5 transition-transform duration-300 ${isSearchOpen ? "stroke-[2.5] scale-110" : "group-hover:scale-110 premium-active"}`} />
                             {isSearchOpen && (
                                 <div className="absolute -inset-1 bg-gray-900/10 dark:bg-white/10 rounded-full blur-md -z-10" />
                             )}

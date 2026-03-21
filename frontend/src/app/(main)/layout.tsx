@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import DynamicBackground from "@/components/DynamicBackground";
+import PageTransition from "@/components/PageTransition";
 import { getNews } from "@/lib/api";
 
 export default async function MainLayout({
@@ -18,7 +19,9 @@ export default async function MainLayout({
       <DynamicBackground />
       <Navbar newsItems={newsItems || []} />
       <main className="flex-grow z-10 relative w-full h-full pb-16 md:pb-0">
-        {children}
+        <PageTransition>
+          {children}
+        </PageTransition>
       </main>
       <Footer />
     </>

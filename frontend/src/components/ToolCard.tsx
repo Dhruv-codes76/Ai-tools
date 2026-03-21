@@ -18,11 +18,11 @@ interface ToolItem {
 
 export default function ToolCard({ tool }: { tool: ToolItem }) {
     return (
-        <article className="group flex flex-col h-full bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden transition-all duration-300 hover:scale-[1.01] hover:bg-white/10 hover:border-white/20 active:scale-[0.98] active:opacity-90">
+        <article className="group flex flex-col h-full bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg premium-hover hover:bg-white/10 hover:border-white/20 premium-active active:opacity-90">
             <Link prefetch={true} href={`/tools/${tool.slug}`} className="flex flex-col h-full">
                  {/* Image Placeholder Container (2:1 approx) with Zoom on Hover */}
                  <div className="relative w-full pt-[40%] bg-muted/30 flex items-center justify-center overflow-hidden border-b border-border/50">
-                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/30 bg-muted/20 transition-transform duration-700 group-hover:scale-105">
+                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/30 bg-muted/20 transition-transform duration-700 group-hover:scale-[1.03]">
                         <Wrench className="w-8 h-8" />
                     </div>
                 </div>

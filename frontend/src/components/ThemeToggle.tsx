@@ -68,7 +68,7 @@ export function ThemeToggle() {
             onClick={toggleTheme}
             className={`
                 relative flex items-center justify-center w-10 h-10 rounded-full
-                transition-colors duration-300 ease-in-out focus:outline-none hover:bg-muted/50
+                transition-colors duration-300 ease-in-out focus:outline-none hover:bg-muted/50 premium-hover premium-active
             `}
             aria-label="Toggle Dark Mode"
             title="Toggle Theme"
