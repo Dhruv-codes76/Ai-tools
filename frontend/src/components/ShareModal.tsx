@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { X, Copy, Download, MessageCircle, Share2, Check, ExternalLink } from "lucide-react";
 import { toPng, toBlob } from 'html-to-image';
 
@@ -18,6 +19,11 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
     const [isSharing, setIsSharing] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
     const previewRef = useRef<HTMLDivElement>(null);
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
 
     useEffect(() => {
         if (isOpen) {
@@ -30,7 +36,7 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
         };
     }, [isOpen]);
 
-    if (!isOpen) return null;
+    if (!isOpen || !isMounted) return null;
 
     const handleCopy = () => {
         navigator.clipboard.writeText(url);
@@ -130,16 +136,16 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
         }
     };
 
-    return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center animate-fade-in p-4 sm:p-6">
+    const modalContent = (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center animate-fade-in p-4 sm:p-6">
             <div
-                className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                className="absolute inset-0 bg-black/70 backdrop-blur-sm"
                 onClick={onClose}
             />
 
             <div
                 ref={modalRef}
-                className="relative bg-[#111] border border-white/10 w-full max-w-md rounded-[24px] shadow-2xl animate-slide-up overflow-hidden z-10 flex flex-col max-h-[90vh]"
+                className="relative bg-white/10 backdrop-blur-xl border border-white/10 w-full max-w-md rounded-[24px] shadow-2xl animate-slide-up overflow-hidden z-10 flex flex-col max-h-[90vh]"
             >
                 <div className="flex items-center justify-between p-5 border-b border-white/5 bg-black/40 shrink-0">
                     <h3 className="font-bold text-lg tracking-tight text-white">Share Article</h3>
@@ -301,4 +307,7 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
             </div>
         </div>
     );
+
+
+    return createPortal(modalContent, document.body);
 }
