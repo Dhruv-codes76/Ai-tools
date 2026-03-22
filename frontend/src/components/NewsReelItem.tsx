@@ -51,22 +51,35 @@ export default function NewsReelItem({ news, isActive, handleInteraction, isInte
         <>
             <div className="relative w-full h-full bg-background overflow-hidden flex flex-col justify-end rounded-3xl shadow-xl">
 
-                {/* Full Screen Background Image */}
-                <div className="absolute inset-0 z-0 overflow-hidden">
+                                {/* Full Screen Background Blur Fallback & Image Container */}
+                <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center p-4">
                     {news.featuredImage ? (
-                        <img
-                            src={news.featuredImage}
-                            alt=""
-                            className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[40s] ease-out ${isActive && !isInteracting ? 'scale-110' : 'scale-100'}`}
-                            loading={isActive ? "eager" : "lazy"}
-                        />
+                        <>
+                            {/* Blurred Background Layer */}
+                            <img
+                                src={news.featuredImage}
+                                alt=""
+                                className="absolute inset-0 w-full h-full object-cover blur-3xl"
+                                aria-hidden="true"
+                            />
+                            {/* Dark Overlay for contrast */}
+                            <div className="absolute inset-0 bg-black/60 z-0" aria-hidden="true" />
+
+                            {/* Primary Floating Image */}
+                            <img
+                                src={news.featuredImage}
+                                alt=""
+                                className={`relative z-10 w-full h-full object-contain drop-shadow-2xl transition-transform duration-[40s] ease-out ${isActive && !isInteracting ? 'scale-110' : 'scale-100'}`}
+                                loading={isActive ? "eager" : "lazy"}
+                            />
+                        </>
                     ) : (
                         <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-900 to-black"></div>
                     )}
                 </div>
 
-                {/* Gradient Overlays for Readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent pointer-events-none z-0"></div>
+                                {/* Gradient Overlays for Readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent pointer-events-none z-10"></div>
 
                 {/* Top Progress Bar (Reels Style) */}
                 <div className="absolute top-safe pt-2 left-2 right-2 h-1 bg-white/20 rounded-full overflow-hidden z-20">

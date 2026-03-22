@@ -49,17 +49,29 @@ export default function NewsCard({ news }: { news: NewsItem }) {
                 {/* Image Placeholder Container (16:9) */}
                 <div className="relative w-full aspect-[16/9] bg-muted/30 overflow-hidden">
                     {(news.image_url || news.featuredImage) ? (
-                        <>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            src={news.image_url || news.featuredImage}
-                            alt={news.title}
-                            loading="lazy"
-                            className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                        />
-                        {/* Gradient overlay for premium feel */}
-                        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
-                        </>
+                        <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center p-2">
+                            {/* Blurred Background Layer */}
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src={news.image_url || news.featuredImage}
+                                alt=""
+                                className="absolute inset-0 w-full h-full object-cover blur-3xl opacity-60 transition-transform duration-700 group-hover:scale-[1.03]"
+                                aria-hidden="true"
+                            />
+                            {/* Dark Overlay for contrast */}
+                            <div className="absolute inset-0 bg-black/60 z-0" aria-hidden="true" />
+
+                            {/* Primary Floating Image */}
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src={news.image_url || news.featuredImage}
+                                alt={news.title}
+                                loading="lazy"
+                                className="relative z-10 w-full h-full object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-[1.03]"
+                            />
+                            {/* Gradient overlay for premium feel */}
+                            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent z-20 pointer-events-none" />
+                        </div>
                     ) : (
                         <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 transition-transform duration-700 group-hover:scale-[1.03] bg-gradient-to-br from-muted/50 to-background/50">
                             <ImageIcon className="w-12 h-12" />
