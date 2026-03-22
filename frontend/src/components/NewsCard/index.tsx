@@ -84,7 +84,7 @@ export default function NewsCard({ news }: { news: NewsItem }) {
                         </time>
                     </div>
 
-                    <h3 className="font-sans text-xl lg:text-2xl font-bold text-foreground leading-snug mb-4 group-hover:text-blue-500 transition-colors line-clamp-2">
+                    <h3 className="font-sans text-xl lg:text-2xl font-bold text-foreground dark:text-white leading-snug mb-4 group-hover:text-blue-500 transition-colors line-clamp-2">
                         {news.title}
                     </h3>
 
