@@ -49,7 +49,7 @@ export default function NewsReelItem({ news, isActive, handleInteraction, isInte
 
     return (
         <>
-            <div className="relative w-full h-full bg-black overflow-hidden flex flex-col justify-end rounded-b-2xl rounded-t-none shadow-xl">
+            <div className="relative w-full h-full bg-black overflow-hidden flex flex-col justify-end rounded-none shadow-xl">
 
                                 {/* Edge-to-Edge Image Header */}
                 <div className="absolute inset-0 z-0 overflow-hidden">
@@ -82,11 +82,11 @@ export default function NewsReelItem({ news, isActive, handleInteraction, isInte
                 </div>
 
                 {/* Main Content Area */}
-                <div className="absolute bottom-0 left-0 w-full h-[45%] p-6 z-20 flex justify-between items-end gap-6 pointer-events-auto pb-24 md:pb-8 bg-black">
+                <div className="absolute bottom-0 left-0 w-full h-[45%] p-6 z-20 flex justify-between items-end gap-4 pointer-events-auto pb-24 md:pb-8 bg-black">
 
                     {/* Left side text content */}
-                    <div className="flex-1 flex flex-col justify-end overflow-hidden pb-4">
-                        <div className="flex items-center gap-3 mb-4">
+                    <div className="flex-1 flex flex-col justify-end overflow-hidden pr-4 space-y-4">
+                        <div className="flex items-center gap-3">
                             {news.trending && (
                                 <span className="bg-red-500 text-white text-[10px] uppercase tracking-widest px-2.5 py-1 rounded shadow-md font-bold">
                                     Trending
@@ -98,18 +98,18 @@ export default function NewsReelItem({ news, isActive, handleInteraction, isInte
                         </div>
 
                         <Link href={`/news/${news.slug}`} className="active:opacity-70 transition-opacity">
-                            <h2 className="text-[26px] sm:text-3xl font-bold font-sans tracking-tight mb-3 text-white leading-[1.15]">
+                            <h2 className="text-[26px] sm:text-3xl font-bold font-sans tracking-tight text-white leading-tight">
                                 {news.title}
                             </h2>
                         </Link>
 
-                        <p className="text-sm text-gray-50 line-clamp-3 leading-[1.6] mb-5 font-medium max-w-[90%] drop-shadow-lg">
+                        <p className="text-sm text-gray-300 line-clamp-3 leading-relaxed font-medium max-w-[95%] drop-shadow-lg">
                             {news.summary}
                         </p>
 
-                        <div className="flex flex-wrap items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2 pt-1">
                             {(news.tags || []).slice(0, 3).map((tag: string) => (
-                                <span key={tag} className="text-[11px] font-semibold px-3 py-1 rounded-full bg-black/40 text-white border border-white/20 backdrop-blur-md shadow-sm">
+                                <span key={tag} className="text-[11px] font-semibold px-3 py-1 rounded-full bg-white/10 text-white border border-white/10 backdrop-blur-md shadow-sm">
                                     #{tag}
                                 </span>
                             ))}
@@ -117,37 +117,37 @@ export default function NewsReelItem({ news, isActive, handleInteraction, isInte
                     </div>
 
                     {/* Right side floating action bar */}
-                    <div className="flex flex-col gap-6 items-center justify-end pb-6 shrink-0 z-30">
+                    <div className="flex flex-col gap-5 items-center justify-end shrink-0 z-30">
                         {news.sourceLink && (
                             <a
                                 href={news.sourceLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-12 h-12 rounded-full bg-black/50 backdrop-blur-xl flex flex-col items-center justify-center border border-white/10 text-white hover:bg-white/20 active:scale-90 transition-all shadow-xl"
+                                className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex flex-col items-center justify-center border border-white/10 text-white hover:bg-white/20 active:scale-90 transition-all shadow-xl"
                                 onClick={handleInteraction}
                             >
-                                <ExternalLink className="w-[22px] h-[22px]" />
-                                <span className="text-[10px] font-semibold mt-1 tracking-wide">Read</span>
+                                <ExternalLink className="w-5 h-5" />
+                                <span className="text-[9px] font-semibold mt-0.5 tracking-wider">READ</span>
                             </a>
                         )}
 
                         <button
-                            className="w-12 h-12 rounded-full bg-black/50 backdrop-blur-xl flex flex-col items-center justify-center border border-white/10 text-white hover:bg-white/20 active:scale-90 transition-all shadow-xl"
+                            className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex flex-col items-center justify-center border border-white/10 text-white hover:bg-white/20 active:scale-90 transition-all shadow-xl"
                             onClick={() => {
                                 setShowComments(true);
                                 handleInteraction();
                             }}
                         >
-                            <MessageCircle className="w-[22px] h-[22px] fill-transparent" />
-                            <span className="text-[10px] font-semibold mt-1 tracking-wide">Chat</span>
+                            <MessageCircle className="w-5 h-5 fill-transparent" />
+                            <span className="text-[9px] font-semibold mt-0.5 tracking-wider">CHAT</span>
                         </button>
 
                         <button
-                            className="w-12 h-12 rounded-full bg-black/50 backdrop-blur-xl flex flex-col items-center justify-center border border-white/10 text-white hover:bg-white/20 active:scale-90 transition-all shadow-xl"
+                            className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex flex-col items-center justify-center border border-white/10 text-white hover:bg-white/20 active:scale-90 transition-all shadow-xl"
                             onClick={toggleShare}
                         >
-                            <Share2 className="w-[22px] h-[22px]" />
-                            <span className="text-[10px] font-semibold mt-1 tracking-wide">Share</span>
+                            <Share2 className="w-5 h-5" />
+                            <span className="text-[9px] font-semibold mt-0.5 tracking-wider">SHARE</span>
                         </button>
                     </div>
                 </div>
