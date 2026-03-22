@@ -49,38 +49,29 @@ export default function NewsReelItem({ news, isActive, handleInteraction, isInte
 
     return (
         <>
-            <div className="relative w-full h-full bg-background overflow-hidden flex flex-col justify-end rounded-2xl shadow-xl">
+            <div className="relative w-full h-full bg-black overflow-hidden flex flex-col justify-end rounded-2xl shadow-xl">
 
-                                {/* Full Screen Background Blur Fallback & Image Container */}
-                <div className="absolute inset-0 z-0 overflow-hidden flex flex-col justify-start pt-8 px-4 pb-[30vh]">
+                                {/* Edge-to-Edge Image Header */}
+                <div className="absolute inset-0 z-0 overflow-hidden">
                     {news.featuredImage ? (
                         <>
-                            {/* Secondary blurred background layer (Dynamic Color Field) */}
+                            {/* Primary Image Showcase (Top 55%) */}
                             <img
                                 src={news.featuredImage}
                                 alt=""
-                                className="absolute inset-0 w-full h-full object-cover blur-[50px] saturate-[1.8]"
-                                aria-hidden="true"
+                                className={`absolute top-0 left-0 w-full h-[55%] object-cover object-top transition-transform duration-[40s] ease-out ${isActive && !isInteracting ? 'scale-110' : 'scale-100'}`}
+                                loading={isActive ? "eager" : "lazy"}
                             />
-                            <div className="absolute inset-0 bg-black/60 z-0" aria-hidden="true" />
-
-                            {/* Primary image centered and contained (Top portion) */}
-                            <div className="relative z-10 w-full h-full flex items-center justify-center">
-                                <img
-                                    src={news.featuredImage}
-                                    alt=""
-                                    className={`relative z-10 w-full h-full max-h-[50vh] object-contain drop-shadow-2xl transition-transform duration-[40s] ease-out ${isActive && !isInteracting ? 'scale-110' : 'scale-100'}`}
-                                    loading={isActive ? "eager" : "lazy"}
-                                />
-                            </div>
+                            {/* The Seamless Fade Overlay */}
+                            <div className="absolute inset-x-0 top-[20%] bottom-[45%] bg-gradient-to-t from-black via-black/80 to-transparent z-10 pointer-events-none" />
+                            <div className="absolute inset-x-0 top-[55%] bottom-0 bg-black z-10 pointer-events-none" />
                         </>
                     ) : (
-                        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-900 to-black"></div>
+                        <div className="absolute inset-0 w-full h-[55%] bg-gradient-to-br from-gray-900 to-black" />
                     )}
                 </div>
 
-                                {/* Gradient Overlays for Readability */}
-                <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black via-black/90 to-transparent pointer-events-none h-[60vh]"></div>
+
 
                 {/* Top Progress Bar (Reels Style) */}
                 <div className="absolute top-safe pt-2 left-2 right-2 h-1 bg-white/20 rounded-full overflow-hidden z-20">
@@ -91,7 +82,7 @@ export default function NewsReelItem({ news, isActive, handleInteraction, isInte
                 </div>
 
                 {/* Main Content Area */}
-                <div className="absolute bottom-0 left-0 w-full p-6 z-10 flex justify-between items-end gap-6 pointer-events-auto pb-24 md:pb-8">
+                <div className="absolute bottom-0 left-0 w-full h-[45%] p-6 z-20 flex justify-between items-end gap-6 pointer-events-auto pb-24 md:pb-8 bg-black">
 
                     {/* Left side text content */}
                     <div className="flex-1 flex flex-col justify-end overflow-hidden pb-4">

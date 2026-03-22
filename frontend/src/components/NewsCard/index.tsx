@@ -43,36 +43,23 @@ export default function NewsCard({ news }: { news: NewsItem }) {
     const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/news/${news.slug}` : `/news/${news.slug}`;
 
     return (
-        <article className="group flex flex-col h-full bg-card backdrop-blur-xl rounded-2xl border border-border shadow-sm hover:shadow-md overflow-visible transition-all duration-300 hover:-translate-y-1 hover:shadow-lg premium-hover hover:bg-white/10 hover:border-white/20 relative">
+        <article className="group flex flex-col h-full bg-black/95 rounded-2xl border border-border shadow-sm hover:shadow-md overflow-visible transition-all duration-300 hover:-translate-y-1 hover:shadow-lg relative overflow-hidden">
             <Link prefetch={true} href={`/news/${news.slug}`} className="flex flex-col h-full rounded-2xl transition-all duration-200 premium-active active:opacity-90 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
 
                 {/* Image Placeholder Container (16:9) */}
                 <div className="relative w-full aspect-[16/9] bg-muted/30 overflow-hidden">
                     {(news.image_url || news.featuredImage) ? (
-                        <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pt-2 px-2 pb-8">
-                            {/* Blurred Background Layer (Dynamic Color Field) */}
+                        <div className="absolute inset-0 z-0 overflow-hidden bg-black/95">
+                            {/* Edge-to-Edge Image */}
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src={news.image_url || news.featuredImage}
-                                alt=""
-                                className="absolute inset-0 w-full h-full object-cover blur-[50px] saturate-[1.8] transition-transform duration-700 group-hover:scale-[1.03]"
-                                aria-hidden="true"
+                                alt={news.title}
+                                loading="lazy"
+                                className="absolute top-0 left-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
                             />
-                            {/* Dark Overlay for contrast */}
-                            <div className="absolute inset-0 bg-black/60 z-0" aria-hidden="true" />
-
-                            {/* Primary Floating Image (Top portion) */}
-                            <div className="relative z-10 w-full h-full flex items-center justify-center">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                    src={news.image_url || news.featuredImage}
-                                    alt={news.title}
-                                    loading="lazy"
-                                    className="relative z-10 w-full h-full max-h-[80%] object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-[1.03]"
-                                />
-                            </div>
-                            {/* Gradient overlay for premium feel */}
-                            <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black via-black/80 to-transparent z-20 pointer-events-none" />
+                            {/* Seamless Fade into Card Background */}
+                            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/95 via-black/80 to-transparent z-10 pointer-events-none" />
                         </div>
                     ) : (
                         <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 transition-transform duration-700 group-hover:scale-[1.03] bg-gradient-to-br from-muted/50 to-background/50">
