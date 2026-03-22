@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { ThemeToggle } from "../ThemeToggle";
 import UserMenu from "../UserMenu";
 import { useEffect, useState, useRef, useMemo } from "react";
-import { Home, Newspaper, Wrench, Menu, Search, X, Clock, TrendingUp } from "lucide-react";
+import { Home, Newspaper, Wrench, Menu, Search, X, Clock, TrendingUp, Info } from "lucide-react";
 import Logo from "../Logo";
 
 export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
@@ -178,6 +178,7 @@ export default function Navbar({ newsItems = [] }: { newsItems?: any[] }) {
         { name: "Home", href: "/", icon: Home },
         { name: "News", href: "/news", icon: Newspaper },
         { name: "Tools", href: "/tools", icon: Wrench },
+        { name: "About", href: "/about", icon: Info },
     ];
 
     // Helper for highlight matching text
