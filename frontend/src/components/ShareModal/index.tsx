@@ -155,6 +155,7 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
                     <button
                         onClick={onClose}
                         className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all text-white/70 hover:text-white"
+                        aria-label="Close share modal"
                     >
                         <X className="w-4 h-4" />
                     </button>
@@ -260,28 +261,28 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
                     </div>
 
                     <div className="grid grid-cols-4 gap-2 sm:gap-4 w-full px-2">
-                        <button onClick={handleWhatsApp} disabled={isSharing || loadingAction !== null} className="flex flex-col items-center gap-3 group disabled:opacity-50">
+                        <button onClick={handleWhatsApp} disabled={isSharing || loadingAction !== null} className="flex flex-col items-center gap-3 group disabled:opacity-50" aria-label="Share via WhatsApp">
                             <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md text-white/90 flex items-center justify-center hover:bg-white/20 hover:text-white transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)] border border-white/10 hover:border-white/30 group-active:scale-95">
                                 {loadingAction === "whatsapp" ? <Loader2 className="w-6 h-6 animate-spin" /> : <MessageCircle className="w-6 h-6" />}
                             </div>
                             <span className="text-xs font-medium text-white/70 group-hover:text-white transition-colors">WhatsApp</span>
                         </button>
 
-                        <button onClick={handleCopy} disabled={isSharing || loadingAction !== null} className="flex flex-col items-center gap-3 group disabled:opacity-50">
+                        <button onClick={handleCopy} disabled={isSharing || loadingAction !== null} className="flex flex-col items-center gap-3 group disabled:opacity-50" aria-label={copied ? "Link copied" : "Copy link"}>
                             <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md text-white/90 flex items-center justify-center hover:bg-white/20 hover:text-white transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)] border border-white/10 hover:border-white/30 group-active:scale-95">
                                 {loadingAction === "copy" ? <Loader2 className="w-6 h-6 animate-spin" /> : (copied ? <Check className="w-6 h-6" /> : <Copy className="w-6 h-6" />)}
                             </div>
                             <span className="text-xs font-medium text-white/70 group-hover:text-white transition-colors">{copied ? "Copied" : "Copy"}</span>
                         </button>
 
-                        <button onClick={handleDownload} disabled={isSharing || loadingAction !== null} className="flex flex-col items-center gap-3 group disabled:opacity-50">
+                        <button onClick={handleDownload} disabled={isSharing || loadingAction !== null} className="flex flex-col items-center gap-3 group disabled:opacity-50" aria-label="Download image">
                             <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md text-white/90 flex items-center justify-center hover:bg-white/20 hover:text-white transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)] border border-white/10 hover:border-white/30 group-active:scale-95">
                                 {loadingAction === "download" ? <Loader2 className="w-6 h-6 animate-spin" /> : <Download className="w-6 h-6" />}
                             </div>
                             <span className="text-xs font-medium text-white/70 group-hover:text-white transition-colors">Save</span>
                         </button>
 
-                        <button onClick={handleNativeShare} disabled={isSharing || loadingAction !== null} className="flex flex-col items-center gap-3 group disabled:opacity-50">
+                        <button onClick={handleNativeShare} disabled={isSharing || loadingAction !== null} className="flex flex-col items-center gap-3 group disabled:opacity-50" aria-label="More share options">
                             <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md text-white/90 flex items-center justify-center hover:bg-white/20 hover:text-white transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)] border border-white/10 hover:border-white/30 group-active:scale-95">
                                 {loadingAction === "native" ? <Loader2 className="w-6 h-6 animate-spin" /> : <Share2 className="w-6 h-6" />}
                             </div>
@@ -299,6 +300,7 @@ export default function ShareModal({ isOpen, onClose, title, url, imageUrl }: Sh
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-white/80 hover:text-white p-1"
+                            aria-label="Open external link"
                         >
                             <ExternalLink className="w-4 h-4" />
                         </a>
