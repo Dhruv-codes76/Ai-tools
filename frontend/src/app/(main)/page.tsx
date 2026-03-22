@@ -32,7 +32,7 @@ export default async function Home() {
         <div className="flex flex-row justify-start gap-4 w-full max-w-lg">
           <Link
             href="/news"
-            className="flex flex-1 items-center justify-center px-4 sm:px-8 py-4 sm:py-5 rounded-2xl bg-gradient-to-r from-foreground to-foreground/90 text-background font-semibold text-center uppercase tracking-widest text-xs sm:text-sm shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:scale-105 active:scale-95 border border-transparent dark:border-white/10"
+            className="flex flex-1 items-center justify-center px-4 sm:px-8 py-4 sm:py-5 rounded-2xl bg-foreground hover:bg-foreground/90 text-background font-semibold text-center uppercase tracking-widest text-xs sm:text-sm shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:scale-105 active:scale-95 border border-transparent dark:border-white/10"
           >
             Read Intelligence
           </Link>
