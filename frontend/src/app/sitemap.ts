@@ -3,7 +3,7 @@ import { MetadataRoute } from 'next';
 import { getNews, getTools } from '@/lib/api';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = 'https://ai-mvp.vercel.app';
+    const baseUrl = 'https://www.aiportalweekly.com';
 
     const baseUrls = [
         {

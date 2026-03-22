@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AI Intelligence Portal",
     description: "Your daily dose of unbiased AI News and the best AI Tools available on the market.",
-    url: "https://ai-mvp.vercel.app",
+    url: "https://www.aiportalweekly.com",
     siteName: "AI Intelligence Portal",
     locale: "en_US",
     type: "website",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "AI Intelligence Portal",
     description: "Your daily dose of unbiased AI News and the best AI Tools available on the market.",
   },
-  metadataBase: new URL("https://ai-mvp.vercel.app"),
+  metadataBase: new URL("https://www.aiportalweekly.com"),
 };
 
 export default function RootLayout({

@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: ['/dashboard/', '/login/'],
         },
-        sitemap: 'https://ai-mvp.vercel.app/sitemap.xml',
+        sitemap: 'https://www.aiportalweekly.com/sitemap.xml',
     };
 }
