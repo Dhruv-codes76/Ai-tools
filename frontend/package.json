@@ -25,6 +25,7 @@
     "@tiptap/extension-underline": "^2.27.2",
     "@tiptap/react": "^2.27.2",
     "@tiptap/starter-kit": "^2.27.2",
+    "cssesc": "^3.0.0",
     "date-fns": "^4.1.0",
     "fuse.js": "^7.1.0",
     "html-to-image": "^1.11.13",
