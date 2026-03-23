@@ -31,6 +31,7 @@ export default function DesktopNewsList({ newsItems }: { newsItems: any[] }) {
                                 <img
                                     src={news.featuredImage}
                                     alt={news.title}
+                                    loading="lazy"
                                     className="w-full h-full object-cover"
                                 />
                             ) : (
