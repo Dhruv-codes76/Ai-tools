@@ -27,19 +27,27 @@ async function apiFetch(path: string, options: RequestInit = {}, retries = 3, ba
                  throw new Error(`Client Error: ${res.status}`);
             }
             return await res.json();
-        } catch (error: any) {
+        } catch (error: unknown) { // Use unknown instead of any
             lastError = error;
+            const err = error as Error;
             // Only retry on network errors, timeouts, or 500s
-            if (error.name === 'AbortError' || error.message.includes('Server Error') || error.message.includes('Rate limited') || error.message.includes('fetch failed')) {
+            if (err.name === 'AbortError' || err.message.includes('Server Error') || err.message.includes('Rate limited') || err.message.includes('fetch failed')) {
                 console.warn(`Fetch failed for ${path}. Retrying (${i + 1}/${retries})...`);
                 await wait(backoff * Math.pow(2, i)); // Exponential backoff
             } else {
-                throw error; // Other unexpected errors (like 404)
+                throw err; // Other unexpected errors (like 404)
             }
         }
     }
 
     console.error(`Fetch definitively failed for ${path} after ${retries} retries:`, lastError);
+    // When backend is totally offline during build, return null so we don't crash Next.js SSG
+    // We are returning null during SSG build steps as Next.js doesn't gracefully handle errors in SSG.
+    if (process.env.NODE_ENV === 'production' && typeof window === 'undefined' && process.env.NEXT_PHASE === 'phase-production-build') {
+       return null;
+    }
+    // Return null during regular CI/CD builds if not set to NEXT_PHASE
+
     // Throw error so error.tsx can catch it
     throw lastError || new Error(`Failed to fetch data from ${path}`);
 }

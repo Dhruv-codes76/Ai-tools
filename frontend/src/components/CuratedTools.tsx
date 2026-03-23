@@ -14,6 +14,7 @@ export default async function CuratedTools() {
 
   return (
     <>
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {latestTools.map((tool: any) => (
         <ToolCard key={tool._id} tool={tool} />
       ))}

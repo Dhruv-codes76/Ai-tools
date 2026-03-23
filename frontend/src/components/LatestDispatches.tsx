@@ -1,4 +1,3 @@
-import Link from "next/link";
 import NewsCard from "@/components/NewsCard";
 import { getNews } from "@/lib/api";
 
@@ -15,6 +14,7 @@ export default async function LatestDispatches() {
 
   return (
     <>
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       {latestNews.map((news: any) => (
         <NewsCard key={news._id} news={news} />
       ))}
