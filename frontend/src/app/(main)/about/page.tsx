@@ -19,13 +19,13 @@ export default function AboutPage() {
 
         <section className="space-y-6 text-lg leading-relaxed text-foreground">
           <p>
-            Welcome to AI Portal Weekly. We built this platform because we were tired of the "hype cycle." In a world where every new tool is marketed as "revolutionary" or a "game-changer," it’s hard to know what actually works.
+            Welcome to AI Portal Weekly. We built this platform because we were tired of the &quot;hype cycle.&quot; In a world where every new tool is marketed as &quot;revolutionary&quot; or a &quot;game-changer,&quot; it&apos;s hard to know what actually works.
           </p>
           <p>
             Our core mission is simple: <strong>No hype. No overcomplication. Just facts.</strong>
           </p>
           <p>
-            We don't sell dreams. We explain what tools actually do, what they don't do, and what they cost in plain language. Every piece of content here is designed to answer one question: <em>What does this actually do for a normal person?</em>
+            We don&apos;t sell dreams. We explain what tools actually do, what they don&apos;t do, and what they cost in plain language. Every piece of content here is designed to answer one question: <em>What does this actually do for a normal person?</em>
           </p>
         </section>
 
@@ -43,14 +43,14 @@ export default function AboutPage() {
             <div className="border-l-4 border-slate-200 dark:border-neutral-800 pl-6">
               <h3 className="text-xl font-medium mb-2 text-foreground">2. Clarity Over Jargon</h3>
               <p className="text-muted-foreground">
-                You shouldn't need a PhD in computer science to understand how a tool works. We use plain English and focus on practical day-to-day utility.
+                You shouldn&apos;t need a PhD in computer science to understand how a tool works. We use plain English and focus on practical day-to-day utility.
               </p>
             </div>
 
             <div className="border-l-4 border-slate-200 dark:border-neutral-800 pl-6">
               <h3 className="text-xl font-medium mb-2 text-foreground">3. Human-Verified Trust</h3>
               <p className="text-muted-foreground">
-                If we haven't tested it, we'll say so. Our directory focuses on providing a clear "What this does" and "Who this is not for" so you can make informed decisions quickly.
+                If we haven&apos;t tested it, we&apos;ll say so. Our directory focuses on providing a clear &quot;What this does&quot; and &quot;Who this is not for&quot; so you can make informed decisions quickly.
               </p>
             </div>
           </div>
