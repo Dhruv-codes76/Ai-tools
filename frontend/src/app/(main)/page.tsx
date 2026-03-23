@@ -1,17 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-import NewsCard from "@/components/NewsCard";
-import ToolCard from "@/components/ToolCard";
-import { getNews, getTools } from "@/lib/api";
+import LatestDispatches from "@/components/LatestDispatches";
+import CuratedTools from "@/components/CuratedTools";
 import { Suspense } from "react";
 
-
-export default async function Home() {
-  const { data: latestNews } = await getNews(1, 6);
-  const { data: latestTools } = await getTools(1, 4);
-
+export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center selection:bg-foreground selection:text-background">
 
@@ -63,13 +58,7 @@ export default async function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-in">
               <Suspense fallback={<><div className="w-full h-80 bg-muted animate-pulse rounded-2xl"></div><div className="w-full h-80 bg-muted animate-pulse rounded-2xl hidden md:block"></div><div className="w-full h-80 bg-muted animate-pulse rounded-2xl hidden lg:block"></div></>}>
-              {latestNews && latestNews.length > 0 ? (
-                latestNews.map((news: any) => (
-                  <NewsCard key={news._id} news={news} />
-                ))
-              ) : (
-                <p className="text-muted-foreground py-8 italic font-sans col-span-full text-center">No transmissions currently active.</p>
-              )}
+                <LatestDispatches />
               </Suspense>
             </div>
           </div>
@@ -85,13 +74,7 @@ export default async function Home() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 animate-fade-in">
               <Suspense fallback={<><div className="w-full h-40 bg-muted animate-pulse rounded-2xl"></div><div className="w-full h-40 bg-muted animate-pulse rounded-2xl"></div><div className="w-full h-40 bg-muted animate-pulse rounded-2xl hidden lg:block"></div><div className="w-full h-40 bg-muted animate-pulse rounded-2xl hidden lg:block"></div></>}>
-              {latestTools && latestTools.length > 0 ? (
-                latestTools.map((tool: any) => (
-                  <ToolCard key={tool._id} tool={tool} />
-                ))
-              ) : (
-                <p className="text-muted-foreground py-8 italic font-sans col-span-full text-center">Catalog currently unavailable.</p>
-              )}
+                <CuratedTools />
               </Suspense>
             </div>
           </div>
