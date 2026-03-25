@@ -55,8 +55,8 @@ class AIWriterService {
      */
     async rewriteNews(rawTitle, rawText) {
         return await this.executeWithRetry(async (genAI) => {
-            // Using gemini-flash-latest which was identified in the available models list.
-            const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+            // Using gemini-flash-lite-latest which was verified as working in our tests.
+            const model = genAI.getGenerativeModel({ model: "gemini-flash-lite-latest" });
 
             const prompt = `
             You are a senior tech journalist for "AI Portal Weekly". 
@@ -97,7 +97,7 @@ class AIWriterService {
     async searchLatestNews() {
         return await this.executeWithRetry(async (genAI) => {
             const model = genAI.getGenerativeModel({ 
-                model: "gemini-flash-latest",
+                model: "gemini-flash-lite-latest",
                 tools: [{ googleSearch: {} }] 
             });
 
