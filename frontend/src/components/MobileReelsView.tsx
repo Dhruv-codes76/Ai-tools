@@ -11,6 +11,7 @@ export default function MobileReelsView({ newsItems }: { newsItems: any[] }) {
     const [activeIndex, setActiveIndex] = useState(0);
     const [isInteracting, setIsInteracting] = useState(false);
     const interactionTimeout = useRef<NodeJS.Timeout>(null);
+    const interactingRef = useRef(false);
     const router = useRouter();
 
     // Intersection Observer to track active slide
@@ -37,11 +38,17 @@ export default function MobileReelsView({ newsItems }: { newsItems: any[] }) {
 
     // Handle interaction pause
     const handleInteraction = useCallback(() => {
-        setIsInteracting(true);
+        if (!interactingRef.current) {
+            interactingRef.current = true;
+            setIsInteracting(true);
+        }
+
         if (interactionTimeout.current) {
             clearTimeout(interactionTimeout.current);
         }
+
         interactionTimeout.current = setTimeout(() => {
+            interactingRef.current = false;
             setIsInteracting(false);
         }, 15000); // Resume auto-scroll after 15s of inactivity
     }, []);

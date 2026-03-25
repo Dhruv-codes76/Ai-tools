@@ -21,3 +21,4 @@ const getLogs = async (req, res, next) => {
 };
 
 module.exports = { getLogs };
+

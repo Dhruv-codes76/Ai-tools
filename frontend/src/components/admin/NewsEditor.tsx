@@ -42,7 +42,7 @@ export default function NewsEditor({ initialData, onSubmit, loading, isEdit = fa
     const [isOptimizing, setIsOptimizing] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [aiTips, setAiTips] = useState<string[]>([]);
-    const [aiHealthMetrics, setAiHealthMetrics] = useState<any>(null);
+    const [aiHealthMetrics, setAiHealthMetrics] = useState<Record<string, unknown> | null>(null);
     const [activeTab, setActiveTab] = useState<"write" | "preview">("write");
 
     useEffect(() => {

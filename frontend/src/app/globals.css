@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -38,6 +40,8 @@
 @layer base {
   body {
     @apply bg-background text-foreground antialiased selection:bg-foreground/20 selection:text-foreground;
+    color: var(--foreground);
+    background-color: var(--background);
     min-height: 100vh;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11"; /* Inter specific improvements */
   }
@@ -55,6 +59,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-sans font-semibold tracking-tight text-foreground;
+    color: var(--foreground);
   }
 
   p {
