@@ -1,15 +1,8 @@
 const Parser = require('rss-parser');
 const axios = require('axios');
-const metascraper = require('metascraper')([
-    require('metascraper-image')(),
-    require('metascraper-title')(),
-    require('metascraper-description')(),
-    require('metascraper-url')()
-]);
-const got = require('got');
-const { uploadToCloudinary } = require('../config/cloudinary');
 const prisma = require('../config/prisma');
 const aiWriterService = require('./aiWriterService');
+const imageService = require('./imageService');
 const { generateSlug } = require('../utils/seoUtils');
 
 class NewsScraperService {
@@ -25,36 +18,13 @@ class NewsScraperService {
         ];
     }
 
-    async uploadImageFromUrl(imageUrl) {
-        if (!imageUrl) return null;
-        try {
-            const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-            const buffer = Buffer.from(response.data, 'binary');
-            const uploadResult = await uploadToCloudinary(buffer, 'news');
-            return uploadResult.secure_url;
-        } catch (error) {
-            console.error('Cloudinary Upload Failed for URL:', imageUrl, error.message);
-            return null;
-        }
-    }
-
-    async getArticleMetadata(url) {
-        try {
-            const { body: html, url: responseUrl } = await got(url);
-            const metadata = await metascraper({ html, url: responseUrl });
-            return metadata;
-        } catch (error) {
-            console.error('Metascraper Failed for URL:', url, error.message);
-            return null;
-        }
-    }
 
     async articleExists(sourceLink) {
         const count = await prisma.news.count({ where: { sourceLink } });
         return count > 0;
     }
 
-    async saveDraftArticle(sourceLink, rawTitle, rawText, originalImageUrl = null) {
+    async saveDraftArticle(sourceLink, rawTitle, rawText) {
         try {
             // Check DB to prevent duplicates
             if (await this.articleExists(sourceLink)) {
@@ -66,8 +36,9 @@ class NewsScraperService {
             console.log(`Processing with Gemini: ${rawTitle}`);
             const rewritten = await aiWriterService.rewriteNews(rawTitle, rawText);
 
-            // 2. Download and Upload Image to Cloudinary
-            let cloudinaryUrl = await this.uploadImageFromUrl(originalImageUrl);
+            // 2. Download and Upload Image to Cloudinary (or fallback)
+            console.log(`Sourcing image for: ${rewritten.title}`);
+            let cloudinaryUrl = await imageService.getFeaturedImageFromUrl(sourceLink, rewritten.title);
 
             // 3. Save to Prisma as DRAFT
             const slug = generateSlug(rewritten.title) + '-' + Math.floor(Math.random() * 1000);
@@ -105,10 +76,8 @@ class NewsScraperService {
                 for (const item of items) {
                     if (await this.articleExists(item.link)) continue;
                     
-                    // Scrape original image
-                    const meta = await this.getArticleMetadata(item.link);
-                    const rawText = item.contentSnippet || item.content || meta?.description || item.title;
-                    await this.saveDraftArticle(item.link, item.title, rawText, meta?.image);
+                    const rawText = item.contentSnippet || item.content || item.title;
+                    await this.saveDraftArticle(item.link, item.title, rawText);
                 }
             } catch (e) {
                 console.error(`RSS Error for ${feedUrl}:`, e.message);
@@ -124,15 +93,10 @@ class NewsScraperService {
                 const posts = res.data.data.children;
                 for (const post of posts) {
                     const data = post.data;
-                    // Only process posts that link to external news articles, not self-posts or images
                     if (!data.is_self && !data.url.includes('reddit.com') && !data.url.includes('i.redd.it')) {
                         if (await this.articleExists(data.url)) continue;
                         
-                        const meta = await this.getArticleMetadata(data.url);
-                        const rawText = meta?.description || data.title;
-                        await this.saveDraftArticle(data.url, data.title, rawText, meta?.image);
-                        
-                        // Limit to 1 top news article per subreddit
+                        await this.saveDraftArticle(data.url, data.title, data.title);
                         break; 
                     }
                 }
@@ -147,9 +111,7 @@ class NewsScraperService {
         const items = await aiWriterService.searchLatestNews();
         for (const item of items) {
             if (!item.url || await this.articleExists(item.url)) continue;
-            
-            const meta = await this.getArticleMetadata(item.url);
-            await this.saveDraftArticle(item.url, item.rawTitle, item.rawText, meta?.image);
+            await this.saveDraftArticle(item.url, item.rawTitle, item.rawText);
         }
     }
 
