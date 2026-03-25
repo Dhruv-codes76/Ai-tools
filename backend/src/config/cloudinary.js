@@ -25,6 +25,5 @@ const uploadToCloudinary = (fileBuffer, folder = 'uploads') => {
 };
 
 module.exports = {
-  cloudinary,
   uploadToCloudinary
 };
