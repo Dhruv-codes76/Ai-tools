@@ -9,10 +9,12 @@ const {
     createNews,
     updateNews,
     deactivateNews,
-    restoreNews
+    restoreNews,
+    autoGenerateNews
 } = require('../controllers/newsController');
 
 router.get('/', getNews);
+router.post('/auto-generate', authMiddleware, autoGenerateNews);
 router.get('/:slug', getNewsBySlug);
 
 router.post('/', authMiddleware, upload.fields([

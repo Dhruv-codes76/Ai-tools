@@ -78,4 +78,16 @@ const restoreNews = async (req, res, next) => {
     }
 };
 
-module.exports = { getNews, getNewsBySlug, createNews, updateNews, deactivateNews, restoreNews };
+const autoGenerateNews = async (req, res, next) => {
+    try {
+        const newsScraperService = require('../services/newsScraperService');
+        // Run asynchronously without blocking the request entirely if we just want to trigger it
+        // Or await it to return success when done. We will await it for synchronous feedback.
+        await newsScraperService.runDailyAutomation();
+        res.json({ message: 'News generation completed successfully! Check the dashboard for new DRAFTs.' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = { getNews, getNewsBySlug, createNews, updateNews, deactivateNews, restoreNews, autoGenerateNews };
