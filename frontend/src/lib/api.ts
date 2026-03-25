@@ -40,15 +40,13 @@ async function apiFetch(path: string, options: RequestInit = {}, retries = 3, ba
         }
     }
 
-    console.error(`Fetch definitively failed for ${path} after ${retries} retries:`, lastError);
-    // When backend is totally offline during build, return null so we don't crash Next.js SSG
-    // We are returning null during SSG build steps as Next.js doesn't gracefully handle errors in SSG.
-    if (process.env.NODE_ENV === 'production' && typeof window === 'undefined' && process.env.NEXT_PHASE === 'phase-production-build') {
+    console.error(`Fetch definitively failed for ${path} after ${retries} retries:`, lastError ? (lastError as Error).message : lastError);
+    // When backend is totally offline (e.g., during Vercel build), return null so we don't crash Next.js SSG
+    if (typeof window === 'undefined') {
        return null;
     }
-    // Return null during regular CI/CD builds if not set to NEXT_PHASE
 
-    // Throw error so error.tsx can catch it
+    // Throw error so error.tsx can catch it on the client
     throw lastError || new Error(`Failed to fetch data from ${path}`);
 }
 
