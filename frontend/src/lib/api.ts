@@ -35,7 +35,7 @@ async function apiFetch(path: string, options: RequestInit = {}, retries = 3, ba
                 console.warn(`Fetch failed for ${path}. Retrying (${i + 1}/${retries})...`);
                 await wait(backoff * Math.pow(2, i)); // Exponential backoff
             } else {
-                throw err; // Other unexpected errors (like 404)
+                break; // Break early on client errors (like 404) instead of throwing immediately so the SSR fallback handles it
             }
         }
     }
