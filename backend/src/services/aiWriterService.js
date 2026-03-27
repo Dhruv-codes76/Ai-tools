@@ -2,13 +2,28 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 class AIWriterService {
     constructor() {
-        // Robust check: Support both plural (keys) and singular (key) env names
-        const rawKeys = process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY;
-        this.apiKeys = rawKeys ? rawKeys.split(',').map(k => k.trim()) : [];
+        const keys = [];
+        
+        // 1. Check for individual numbered keys (most reliable for Render)
+        if (process.env.GEMINI_API_KEY_1) keys.push(process.env.GEMINI_API_KEY_1.trim());
+        if (process.env.GEMINI_API_KEY_2) keys.push(process.env.GEMINI_API_KEY_2.trim());
+        if (process.env.GEMINI_API_KEY_3) keys.push(process.env.GEMINI_API_KEY_3.trim());
+
+        // 2. Fallback to comma-separated list if no numbered keys found
+        if (keys.length === 0) {
+            const rawKeys = process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY;
+            if (rawKeys) {
+                const splitKeys = rawKeys.split(',').map(k => k.trim()).filter(k => k !== '');
+                keys.push(...splitKeys);
+            }
+        }
+
+        // Remove any potential duplicates and save
+        this.apiKeys = [...new Set(keys)];
         this.currentIndex = 0;
         
         if (this.apiKeys.length === 0) {
-            console.warn("WARNING: GEMINI_API_KEYS or GEMINI_API_KEY is missing. AI Writer will fail.");
+            console.warn("WARNING: No Gemini API keys found (tried GEMINI_API_KEY_1-3 and GEMINI_API_KEYS). AI Writer will fail.");
         } else {
             console.log(`AI Writer initialized with ${this.apiKeys.length} API keys.`);
         }
