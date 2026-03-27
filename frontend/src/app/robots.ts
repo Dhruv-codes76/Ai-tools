@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
         rules: {
             userAgent: '*',
             allow: '/',
-            disallow: ['/dashboard/', '/login/'],
+            disallow: ['/admin/', '/login/'],
         },
         sitemap: 'https://www.aiportalweekly.com/sitemap.xml',
     };

@@ -26,7 +26,7 @@ interface SEOEditorProps {
 
 export default function SEOEditor({ data, onChange, baseSlug, type }: SEOEditorProps) {
     const [activeTab, setActiveTab] = useState<"google" | "social">("google");
-    const baseUrl = "https://ai-news-portal.com"; // Replace with actual domain
+    const baseUrl = "https://www.aiportalweekly.com"; // Replace with actual domain
     const fullUrl = `${baseUrl}/${type === "news" ? "news" : "tools"}/${baseSlug}`;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

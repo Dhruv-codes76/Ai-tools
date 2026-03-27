@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     const title = article.seoMetaTitle || article.title;
     const description = article.seoMetaDescription || article.summary;
-    const url = `https://ai-news-portal.com/news/${article.slug}`;
+    const url = `https://www.aiportalweekly.com/news/${article.slug}`;
 
     return {
         title: `${title} | AI News`,
