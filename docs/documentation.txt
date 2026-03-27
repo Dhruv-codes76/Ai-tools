@@ -6,10 +6,12 @@ Tech Stack
 ----------
 - Frontend: Next.js (App Router), React, Tailwind CSS v4, Material UI. Used for building a fast, SEO-friendly, and modern user interface.
 - Backend: Node.js, Express.js. Used to build the API that connects the frontend to the databases.
+- AI Integration: 
+  - Dual-Model Strategy: `gemini-2.5-flash-lite` automatically powers high-quality background scraping. `gemini-flash-lite-latest` natively powers manual SEO tuning to conserve API quotas.
 - Databases:
   - MongoDB (via Mongoose): Stores News, Tools, Categories, Admins, and Activity Logs. Good for flexible document storage.
   - PostgreSQL (via Prisma v5): Stores user Comments. Good for structured, relational data like comment threads.
-- Styling: Tailwind CSS handles most of the design, with a few complex UI components built using Material UI.
+- Styling: Tailwind CSS handles most of the design, with a few complex UI components built using Material UI. Fixes applied to isolate intrinsic image dimensions guaranteeing uniform heights dynamically.
 
 Project Structure
 -----------------

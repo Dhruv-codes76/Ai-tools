@@ -19,20 +19,56 @@ class NewsScraperService {
     }
 
 
-    async articleExists(sourceLink) {
-        const count = await prisma.news.count({ where: { sourceLink } });
-        return count > 0;
+    /**
+     * Normalizes a title for loose duplicate checking.
+     */
+    normalizeTitle(title) {
+        return title
+            .toLowerCase()
+            .replace(/[^\w\s]/gi, '')
+            .split(' ')
+            .filter(w => w.length > 3)
+            .join(' ');
+    }
+
+    async articleExists(sourceLink, rawTitle = null) {
+        // 1. Check exact source link
+        const exactMatch = await prisma.news.findFirst({ where: { sourceLink } });
+        if (exactMatch) return true;
+
+        if (rawTitle) {
+            const normalized = this.normalizeTitle(rawTitle);
+            if (normalized.length < 10) return false;
+
+            // 2. Simple fuzzy check: See if any existing title contains most of these words
+            // This is a "cheap" check to avoid expensive AI calls for the same news story
+            const similarNews = await prisma.news.findFirst({
+                where: {
+                    title: {
+                        contains: normalized.split(' ')[0], // Start with first major word
+                        mode: 'insensitive'
+                    }
+                }
+            });
+
+            if (similarNews) {
+                console.log(`Potential duplicate found by title analysis: "${rawTitle}" matches "${similarNews.title}"`);
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     async saveDraftArticle(sourceLink, rawTitle, rawText, source = "MANUAL") {
         try {
-            // Check DB to prevent duplicates
-            if (await this.articleExists(sourceLink)) {
-                console.log(`Skipping duplicate: ${sourceLink}`);
+            // Check DB to prevent duplicates (Source Link OR Similar Title)
+            if (await this.articleExists(sourceLink, rawTitle)) {
+                console.log(`Skipping duplicate story: ${rawTitle}`);
                 return;
             }
 
-            // 1. Rewrite via Gemini
+            // 1. Rewrite via Gemini with SEO rules
             console.log(`Processing with Gemini: ${rawTitle}`);
             const rewritten = await aiWriterService.rewriteNews(rawTitle, rawText);
 
@@ -41,7 +77,9 @@ class NewsScraperService {
             let cloudinaryUrl = await imageService.getFeaturedImageFromUrl(sourceLink, rewritten.title);
 
             // 3. Save to Prisma as DRAFT
-            const slug = generateSlug(rewritten.title) + '-' + Math.floor(Math.random() * 1000);
+            // Use Focus Keyphrase for the slug (SEO BEST PRACTICE) to keep it under 60 chars
+            const slugBase = rewritten.focusKeyphrase || rewritten.title;
+            const slug = generateSlug(slugBase) + '-' + Math.floor(Math.random() * 1000);
 
             await prisma.news.create({
                 data: {
@@ -49,19 +87,20 @@ class NewsScraperService {
                     slug,
                     summary: rewritten.summary,
                     content: rewritten.content,
+                    focusKeyphrase: rewritten.focusKeyphrase,
                     sourceLink,
                     source,
-                    featuredImage: cloudinaryUrl || '', // Fallback empty if no image 
-                    featuredImageAlt: rewritten.title,
+                    featuredImage: cloudinaryUrl || '', 
+                    featuredImageAlt: rewritten.featuredImageAlt || rewritten.title,
                     status: 'DRAFT',
-                    seoMetaTitle: rewritten.title,
-                    seoMetaDescription: rewritten.summary,
+                    seoMetaTitle: rewritten.seoMetaTitle || rewritten.title,
+                    seoMetaDescription: rewritten.seoMetaDescription || rewritten.summary,
                     canonicalUrl: `/news/${slug}`,
                     isDeleted: false
                 }
             });
 
-            console.log(`Saved DRAFT News: ${rewritten.title}`);
+            console.log(`✅ Saved SEO-Optimized DRAFT: ${rewritten.title}`);
         } catch (error) {
             console.error(`Failed to save draft for ${sourceLink}:`, error);
         }

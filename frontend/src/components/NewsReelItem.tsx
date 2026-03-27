@@ -195,7 +195,7 @@ export default function NewsReelItem({ news, isActive, handleInteraction, isInte
                 isOpen={showShare}
                 onClose={() => setShowShare(false)}
                 title={news.title}
-                url={`${window.location.origin}/news/${news.slug}`}
+                url={`${typeof window !== 'undefined' ? window.location.origin : ''}/news/${news.slug}`}
                 imageUrl={news.featuredImage}
             />
         </>

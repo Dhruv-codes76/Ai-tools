@@ -1,4 +1,4 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const aiWriterService = require('../services/aiWriterService');
 
 const optimizeSEO = async (req, res) => {
     try {
@@ -8,57 +8,68 @@ const optimizeSEO = async (req, res) => {
             return res.status(400).json({ error: "Content is required" });
         }
 
-        const apiKey = process.env.GEMINI_API_KEY;
-        if (!apiKey) {
-            console.error("Missing GEMINI_API_KEY in backend/.env");
-            return res.status(500).json({ error: "API Key Configuration Error" });
-        }
+        const seoData = await aiWriterService.executeWithRetry(async (genAI, activeModel) => {
+            const model = genAI.getGenerativeModel({ model: activeModel });
 
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
-        const prompt = `
-            You are a Senior SEO Specialist. Analyze the following ${type || 'article'} content and provide the perfect SEO metadata.
+            const prompt = `
+            You are a Senior SEO Specialist for "AI Portal Weekly". 
+            Analyze the following ${type || 'article'} content and provide a perfect SEO metadata set.
             
-            Content: "${content.substring(0, 5000)}"
-            Existing Title: "${title || ''}"
-            ${focusKeyphrase ? `Target Focus Keyphrase: "${focusKeyphrase}"` : ''}
+            SEO AUDIT RULES (STRICT):
+            1. **Keyphrase**: Use "${focusKeyphrase || 'Identify a 2-4 word primary keyphrase'}" as the focusKeyphrase.
+            2. **Title**: Generate an "seoMetaTitle" (Strictly 45-60 chars) including the keyphrase.
+            3. **Slug**: Generate a clean "slug" (max 60 chars) starting with the keyphrase.
+            4. **Meta Description**: Generate an "seoMetaDescription" (Strictly 140-155 characters). NEVER exceed 155.
+            5. **Alt Text**: Generate "featuredImageAlt" including the keyphrase.
+            6. **Readability Metrics**: Evaluate Passive Voice (<10%) and Transitions (>25%).
 
-            Return ONLY a JSON object with the following fields:
-            1. focusKeyphrase: ${focusKeyphrase ? 'Must be EXACTLY "' + focusKeyphrase + '", do not change it.' : 'Generate the best 2-4 word SEO keyphrase.'}
-            2. seoMetaTitle: A compelling search title (approx 55 chars, max 60). Incorporate the focus keyphrase.
-            3. slug: A clean, hyphenated URL slug (max 60 chars) ideally matching the focus keyphrase.
-            4. seoMetaDescription: A high-CTR meta description. CRITICAL: MUST be between 130 and 150 characters. NEVER exceed 155 characters.
-            5. summary: A brief 1-2 sentence summary of the article for readers (max 200 chars).
-            6. improvementTips: An array of 1-3 short, highly specific actionable tips (max 12 words each) to improve the blog's SEO and readability. Focus on things the user can fix themselves (e.g., "Use more transition words", "Break up large paragraphs", "Use active voice"). If it's perfect, return an empty array.
-            7. featuredImageAlt: A short, descriptive alt text for a potential featured image (5-10 words) that includes the focus keyphrase naturally for accessibility and SEO.
-            8. healthMetrics: An object containing precise evaluations of the text:
-               - "hasShortParagraphs": boolean (true if all paragraphs are under 150 words)
-               - "variedSentenceStarts": boolean (true if the author rarely starts more than 2 consecutive sentences with the same word)
-               - "passiveVoicePercentage": number (the exact percentage of sentences written in passive voice, e.g. 5, 12, 0)
-               - "transitionsPercentage": number (the exact percentage of sentences containing a transition word like 'however', 'moreover', 'therefore', e.g. 25, 30, 10).
+            Content Overview: "${content.substring(0, 3000)}"
+            Published Title: "${title || ''}"
 
-            Format the response as a valid JSON object. No extra text or markdown.
-        `;
+            Respond ONLY with this JSON structure:
+            {
+                "focusKeyphrase": "the target keyword",
+                "seoMetaTitle": "45-60 chars",
+                "slug": "url-slug-here",
+                "seoMetaDescription": "140-155 chars",
+                "summary": "1-2 sentence lead summary (max 180 chars)",
+                "featuredImageAlt": "Alt text with keyword",
+                "improvementTips": ["Tip 1", "Tip 2"],
+                "healthMetrics": {
+                    "hasShortParagraphs": boolean,
+                    "variedSentenceStarts": boolean,
+                    "passiveVoicePercentage": number,
+                    "transitionsPercentage": number
+                }
+            }
+            `;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        let text = response.text();
-        
-        // Clean up markdown code blocks if present
-        text = text.replace(/```json/g, "").replace(/```/g, "").trim();
-        
-        const seoData = JSON.parse(text);
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            let text = response.text();
+            
+            // Robust JSON extraction
+            text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
 
-        // Programmatic fallback to guarantee description is never over 160 chars
+            // Find the first { and last } to ensure pure JSON
+            const firstBrace = text.indexOf('{');
+            const lastBrace = text.lastIndexOf('}');
+            if (firstBrace !== -1 && lastBrace !== -1) {
+                text = text.substring(firstBrace, lastBrace + 1);
+            }
+
+            return JSON.parse(text);
+        }, 'gemini-flash-lite-latest');
+
+        // Backend enforcement to guarantee description is under 160 chars for UI safety
         if (seoData.seoMetaDescription && seoData.seoMetaDescription.length > 160) {
-            seoData.seoMetaDescription = seoData.seoMetaDescription.substring(0, 157).trim() + "...";
+            seoData.seoMetaDescription = seoData.seoMetaDescription.substring(0, 157) + "...";
         }
 
         res.json(seoData);
     } catch (error) {
-        console.error("SEO Optimization Error:", error);
-        res.status(500).json({ error: "Failed to optimize SEO" });
+        console.error("SEO Optimization Error:", error.message);
+        res.status(500).json({ error: "Failed to reach the Magic engine. Try again in a moment." });
     }
 };
 

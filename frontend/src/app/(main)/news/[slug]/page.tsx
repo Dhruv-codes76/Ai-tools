@@ -65,7 +65,7 @@ export default async function SingleNewsPage({ params }: { params: Promise<{ slu
 
     return (
         <SwipeToBack>
-            <div className="max-w-[700px] mx-auto px-4 sm:px-6 py-8 md:py-16 animate-fade-in animate-slide-up pb-24">
+            <div className="max-w-[850px] mx-auto px-4 sm:px-6 py-8 md:py-16 animate-fade-in animate-slide-up pb-24">
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

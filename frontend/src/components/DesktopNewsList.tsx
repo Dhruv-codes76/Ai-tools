@@ -26,16 +26,16 @@ export default function DesktopNewsList({ newsItems }: { newsItems: any[] }) {
                         className="flex flex-col md:flex-row gap-6 bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-200"
                     >
                         {/* Image Block */}
-                        <div className="w-full md:w-[300px] h-48 md:h-full relative shrink-0 bg-muted">
+                        <div className="w-full md:w-[320px] h-56 md:h-auto md:min-h-[220px] relative shrink-0 bg-muted overflow-hidden">
                             {news.featuredImage ? (
                                 <img
                                     src={news.featuredImage}
                                     alt={news.title}
                                     loading="lazy"
-                                    className="w-full h-full object-cover"
+                                    className="absolute inset-0 w-full h-full object-cover"
                                 />
                             ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500/10 to-purple-500/10">
+                                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-indigo-500/10 to-purple-500/10">
                                     <span className="text-muted-foreground/50">No Image</span>
                                 </div>
                             )}

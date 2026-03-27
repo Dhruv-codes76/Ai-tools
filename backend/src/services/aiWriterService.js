@@ -19,90 +19,133 @@ class AIWriterService {
         }
 
         // Remove any potential duplicates and save
-        this.apiKeys = [...new Set(keys)];
+        this.apiKeys = [
+            process.env.GEMINI_API_KEY_1,
+            process.env.GEMINI_API_KEY_2,
+            process.env.GEMINI_API_KEY_3
+        ].filter(Boolean).map(key => key.trim());
+
         this.currentIndex = 0;
+        this.currentModel = 'gemini-2.5-flash'; // High-End Default for Scraping
         
         if (this.apiKeys.length === 0) {
-            console.warn("WARNING: No Gemini API keys found (tried GEMINI_API_KEY_1-3 and GEMINI_API_KEYS). AI Writer will fail.");
+            console.warn("WARNING: No Gemini API keys found (tried GEMINI_API_KEY_1-3). AI Writer will fail.");
         } else {
-            console.log(`AI Writer initialized with ${this.apiKeys.length} API keys.`);
+            console.log(`AI Writer initialized with ${this.apiKeys.length} API keys. Scraper Default: ${this.currentModel}`);
         }
     }
 
     /**
-     * Gets a new GenAI instance using the current rotation index.
+     * Helper to get a configured GenAI instance with the current key.
      */
     getGenAI() {
-        if (this.apiKeys.length === 0) throw new Error("No Gemini API keys configured.");
-        const key = this.apiKeys[this.currentIndex].trim();
-        return new GoogleGenerativeAI(key);
+        if (this.apiKeys.length === 0) {
+            throw new Error("No Gemini API keys found in environment variables.");
+        }
+        return new GoogleGenerativeAI(this.apiKeys[this.currentIndex]);
     }
 
     /**
-     * Rotates to the next API key (internal use).
+     * Rotates to the next API key.
      */
     rotateKey() {
         if (this.apiKeys.length > 1) {
             this.currentIndex = (this.currentIndex + 1) % this.apiKeys.length;
             console.log(`Rotating Gemini API Key. New index: ${this.currentIndex}`);
+            return this.currentIndex === 0;
         }
+        return false;
     }
 
     /**
-     * Public method to pre-rotate before each cron run.
-     * With 3 keys and 3 daily runs, each run uses a different primary account.
+     * Executes a Gemini operation with retry and automatic key rotation/fallback.
      */
-    rotateApiKey() {
-        this.rotateKey();
-    }
+    async executeWithRetry(operation, modelOverride = null, retryCount = 0) {
+        let activeModel = modelOverride || this.currentModel;
+        
+        // Safety: Map unavailable specific names to their supported aliases in this API version
+        if (activeModel.includes('1.5-flash')) {
+            activeModel = 'gemini-flash-latest';
+        } else if (activeModel === 'gemini-2.5-flash') {
+            activeModel = 'gemini-2.5-flash-lite'; // Available variant
+        }
 
-    /**
-     * Executes a Gemini request with automatic key rotation on failure.
-     */
-    async executeWithRetry(operation, retryCount = 0) {
-        const maxRetries = this.apiKeys.length * 2;
+        const maxRetries = this.apiKeys.length * 2; 
+
         try {
-            return await operation(this.getGenAI());
+            return await operation(this.getGenAI(), activeModel);
         } catch (error) {
-            console.error(`Gemini Operation Failed (Key Index ${this.currentIndex}):`, error.message);
+            const isDailyQuotaExhausted = error.message?.includes('GenerateRequestsPerDayPerProjectPerModel-FreeTier');
+            const isRateLimit = error.status === 429 || error.message?.includes('Minute');
+
+            if (isDailyQuotaExhausted) {
+                console.error(`🔴 Key Index ${this.currentIndex} has EXHAUSTED its DAILY limit for ${activeModel}.`);
+            } else if (isRateLimit) {
+                console.warn(`🕒 Key Index ${this.currentIndex} hit a per-minute limit. Waiting 2 seconds then rotating...`);
+            } else {
+                console.error(`Gemini Error (${activeModel}):`, error.message);
+            }
             
-            // Rotate and retry on: 400 (invalid key/model), 404, 429 (rate limit), quota errors
             const isRetriable = error.status === 400 || error.status === 404 || error.status === 429 || error.message?.includes('quota') || error.message?.includes('not found') || error.message?.includes('API_KEY_INVALID');
             
             if (isRetriable && retryCount < maxRetries) {
-                this.rotateKey();
-                return await this.executeWithRetry(operation, retryCount + 1);
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                const hasCycledAllKeys = this.rotateKey();
+
+                // FALLBACK: If 2.5 is failing on all keys, downgrade to 1.5 for the scraper
+                if (!modelOverride && hasCycledAllKeys && this.currentModel === 'gemini-2.5-flash') {
+                    console.log("⚠️ ALL KEYS FAILED for gemini-2.5-flash. Falling back to gemini-1.5-flash...");
+                    this.currentModel = 'gemini-1.5-flash';
+                }
+
+                return await this.executeWithRetry(operation, modelOverride, retryCount + 1);
             }
             throw error;
         }
     }
 
     /**
-     * Uses Gemini to rewrite raw news text into a structured JSON format matching the brand.
+     * Uses Gemini to rewrite raw news text into a structured JSON format with strict SEO optimization.
      */
     async rewriteNews(rawTitle, rawText) {
-        return await this.executeWithRetry(async (genAI) => {
-            // gemini-2.0-flash-lite is the correct lightweight model for fast rewrites
-            const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
+        return await this.executeWithRetry(async (genAI, activeModel) => {
+            const model = genAI.getGenerativeModel({ model: activeModel });
 
             const prompt = `
-            You are a senior tech journalist for "AI Portal Weekly". 
-            Your brand's core rule is "No Hype. Down-to-Reality".
+            You are a senior SEO journalist for "AI Portal Weekly". 
+            Your goal is to write a post that passes a 100/100 SEO Audit.
             
-            Rewrite the following news announcement. 
-            Explain what changed and why it matters to a normal person in plain English.
-            Do not use marketing jargon or words like "revolutionary" or "game-changer".
+            SEO CONTENT RULES (CRITICAL):
+            1. **Keyphrase**: Identify a 2-3 word "focusKeyphrase" (e.g., "OpenAI Sora Shutdown").
+            2. **Placement**: You MUST include the exact focusKeyphrase in:
+               - The main Title
+               - The first 50 words of the Introduction
+               - At least one <h2> heading
+               - The final Conclusion paragraph
+            3. **Meta lengths**: 
+               - "seoMetaTitle" MUST be between 45 and 60 characters. 
+               - "seoMetaDescription" MUST be between 140 and 155 characters. (NEVER exceed 155)
+            4. **Readability**: 
+               - Use **Active Voice** only. (e.g., "OpenAI released" NOT "was released by").
+               - Use at least 5 **Transition Words** (e.g., Furthermore, Consequently, However, Additionally, Similarly).
+            5. **Length**: Total word count MUST be at least 300 words.
+            6. **Tone**: Objective, factual, and strictly no-hype.
 
             Raw Title: ${rawTitle}
             Raw Text: ${rawText}
 
-            Respond ONLY with a valid JSON block containing:
+            Respond ONLY with this JSON structure:
             {
-                "title": "A clear, factual title without hype",
-                "summary": "One sentence summary of the news",
-                "content": "The full rewritten article formatted as beautiful HTML using <h2>, <p>, and <ul> tags. Do NOT use markdown. Start directly with the content. Structure: <h2>Real-World Relevance</h2><p>...</p><h2>How it Works</h2><p>...</p>",
-                "quickTake": "One honest sentence summarizing the actual impact",
-                "hypeLevel": <integer between 1 and 5, rating how overhyped the original announcement was>
+                "title": "Post Title (Must include Focus Keyphrase)",
+                "summary": "150-character summary",
+                "focusKeyphrase": "the 2-3 word keyword",
+                "content": "HTML structure with <h2> and <p>. Ensure Keyphrase is in Intro, H2, and Conclusion. Use transitions.",
+                "seoMetaTitle": "Strictly 45-60 chars including Keyphrase",
+                "seoMetaDescription": "Strictly 140-155 chars including Keyphrase",
+                "featuredImageAlt": "Alt text including Focus Keyphrase",
+                "quickTake": "One-sentence impact analysis",
+                "hypeLevel": <1-5>
             }
             `;
 
@@ -110,8 +153,12 @@ class AIWriterService {
             const response = await result.response;
             let text = response.text();
             
-            if (text.startsWith('\`\`\`')) {
-                text = text.replace(/^\`\`\`(json)?/, '').replace(/\`\`\`$/, '').trim();
+            text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+
+            const firstBrace = text.indexOf('{');
+            const lastBrace = text.lastIndexOf('}');
+            if (firstBrace !== -1 && lastBrace !== -1) {
+                text = text.substring(firstBrace, lastBrace + 1);
             }
 
             return JSON.parse(text);
@@ -122,21 +169,21 @@ class AIWriterService {
      * Uses Gemini Search Grounding to find breaking news today.
      */
     async searchLatestNews() {
-        return await this.executeWithRetry(async (genAI) => {
+        return await this.executeWithRetry(async (genAI, activeModel) => {
             const model = genAI.getGenerativeModel({ 
-                model: "gemini-2.0-flash-lite",
+                model: activeModel,
                 tools: [{ googleSearch: {} }] 
             });
 
             const prompt = `
-            Search Google for the 1 most important and impactful artificial intelligence news announcement from the last 24 hours.
-            Return ONLY a JSON array containing the news item. Do not use markdown blocks.
+            Search Google for the 1 most impactful artificial intelligence news announcement from the last 24 hours.
+            Return ONLY a JSON array containing the news item.
             Format:
             [
                 {
-                    "url": "the original source URL of the news",
+                    "url": "original source URL",
                     "rawTitle": "The headline",
-                    "rawText": "A 2 paragraph detailed summary of what was announced based on your search"
+                    "rawText": "A 3 paragraph detailed factual summary of what was announced"
                 }
             ]
             `;
@@ -145,14 +192,15 @@ class AIWriterService {
             const response = await result.response;
             let text = response.text();
             
-            if (text.startsWith('\`\`\`')) {
-                text = text.replace(/^\`\`\`(json)?/, '').replace(/\`\`\`$/, '').trim();
+            text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+
+            const firstBracket = text.indexOf('[');
+            const lastBracket = text.lastIndexOf(']');
+            if (firstBracket !== -1 && lastBracket !== -1) {
+                text = text.substring(firstBracket, lastBracket + 1);
             }
 
             return JSON.parse(text);
-        }).catch(err => {
-            console.error("Gemini Search Grounding Final Error:", err.message);
-            return [];
         });
     }
 }
