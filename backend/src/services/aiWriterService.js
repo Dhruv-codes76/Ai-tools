@@ -24,13 +24,21 @@ class AIWriterService {
     }
 
     /**
-     * Rotates to the next API key.
+     * Rotates to the next API key (internal use).
      */
     rotateKey() {
         if (this.apiKeys.length > 1) {
             this.currentIndex = (this.currentIndex + 1) % this.apiKeys.length;
             console.log(`Rotating Gemini API Key. New index: ${this.currentIndex}`);
         }
+    }
+
+    /**
+     * Public method to pre-rotate before each cron run.
+     * With 3 keys and 3 daily runs, each run uses a different primary account.
+     */
+    rotateApiKey() {
+        this.rotateKey();
     }
 
     /**
@@ -43,8 +51,8 @@ class AIWriterService {
         } catch (error) {
             console.error(`Gemini Operation Failed (Key Index ${this.currentIndex}):`, error.message);
             
-            // If it's a 404 (Model not found) or 429 (Rate limit) or Quota error, rotate and retry
-            const isRetriable = error.status === 404 || error.status === 429 || error.message?.includes('quota') || error.message?.includes('not found');
+            // Rotate and retry on: 400 (invalid key/model), 404, 429 (rate limit), quota errors
+            const isRetriable = error.status === 400 || error.status === 404 || error.status === 429 || error.message?.includes('quota') || error.message?.includes('not found') || error.message?.includes('API_KEY_INVALID');
             
             if (isRetriable && retryCount < maxRetries) {
                 this.rotateKey();
@@ -59,8 +67,8 @@ class AIWriterService {
      */
     async rewriteNews(rawTitle, rawText) {
         return await this.executeWithRetry(async (genAI) => {
-            // Using gemini-flash-lite-latest which was verified as working in our tests.
-            const model = genAI.getGenerativeModel({ model: "gemini-flash-lite-latest" });
+            // gemini-2.0-flash-lite is the correct lightweight model for fast rewrites
+            const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
 
             const prompt = `
             You are a senior tech journalist for "AI Portal Weekly". 
@@ -101,7 +109,7 @@ class AIWriterService {
     async searchLatestNews() {
         return await this.executeWithRetry(async (genAI) => {
             const model = genAI.getGenerativeModel({ 
-                model: "gemini-flash-lite-latest",
+                model: "gemini-2.0-flash-lite",
                 tools: [{ googleSearch: {} }] 
             });
 

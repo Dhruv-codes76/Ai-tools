@@ -116,6 +116,10 @@ class NewsScraperService {
         }
     }
 
+    rotateApiKey() {
+        aiWriterService.rotateApiKey();
+    }
+
     async runDailyAutomation() {
         console.log('Automated News Generation Triggered');
         await this.fetchRSS();
