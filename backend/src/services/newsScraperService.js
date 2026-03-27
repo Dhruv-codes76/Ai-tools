@@ -24,7 +24,7 @@ class NewsScraperService {
         return count > 0;
     }
 
-    async saveDraftArticle(sourceLink, rawTitle, rawText) {
+    async saveDraftArticle(sourceLink, rawTitle, rawText, source = "MANUAL") {
         try {
             // Check DB to prevent duplicates
             if (await this.articleExists(sourceLink)) {
@@ -50,6 +50,7 @@ class NewsScraperService {
                     summary: rewritten.summary,
                     content: rewritten.content,
                     sourceLink,
+                    source,
                     featuredImage: cloudinaryUrl || '', // Fallback empty if no image 
                     featuredImageAlt: rewritten.title,
                     status: 'DRAFT',
@@ -77,7 +78,7 @@ class NewsScraperService {
                     if (await this.articleExists(item.link)) continue;
                     
                     const rawText = item.contentSnippet || item.content || item.title;
-                    await this.saveDraftArticle(item.link, item.title, rawText);
+                    await this.saveDraftArticle(item.link, item.title, rawText, "RSS");
                 }
             } catch (e) {
                 console.error(`RSS Error for ${feedUrl}:`, e.message);
@@ -96,7 +97,7 @@ class NewsScraperService {
                     if (!data.is_self && !data.url.includes('reddit.com') && !data.url.includes('i.redd.it')) {
                         if (await this.articleExists(data.url)) continue;
                         
-                        await this.saveDraftArticle(data.url, data.title, data.title);
+                        await this.saveDraftArticle(data.url, data.title, data.title, "REDDIT");
                         break; 
                     }
                 }
@@ -111,7 +112,7 @@ class NewsScraperService {
         const items = await aiWriterService.searchLatestNews();
         for (const item of items) {
             if (!item.url || await this.articleExists(item.url)) continue;
-            await this.saveDraftArticle(item.url, item.rawTitle, item.rawText);
+            await this.saveDraftArticle(item.url, item.rawTitle, item.rawText, "GEMINI_SEARCH");
         }
     }
 

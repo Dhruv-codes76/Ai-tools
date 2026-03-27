@@ -15,11 +15,27 @@ interface NewsItem {
     featuredImage?: string;
     trending?: boolean;
     category?: string;
+    source?: string;
 }
 
 export default function NewsCard({ news }: { news: NewsItem }) {
     const [isSaved, setIsSaved] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
+
+    const getSourceStyles = (source?: string) => {
+        switch (source) {
+            case 'RSS':
+                return "bg-blue-600/80 text-white";
+            case 'REDDIT':
+                return "bg-orange-600/80 text-white";
+            case 'GEMINI_SEARCH':
+                return "bg-gradient-to-r from-purple-600/80 to-blue-500/80 text-white";
+            default:
+                return null;
+        }
+    };
+
+    const sourceStyles = getSourceStyles(news.source);
 
     const date = new Date(news.createdAt).toLocaleDateString("en-US", {
         month: "short",
@@ -72,6 +88,15 @@ export default function NewsCard({ news }: { news: NewsItem }) {
                         <div className="absolute top-4 left-4 z-10">
                             <span className="bg-black/60 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-sm">
                                 {news.category}
+                            </span>
+                        </div>
+                    )}
+
+                    {/* Source Badge */}
+                    {news.source && sourceStyles && (
+                        <div className="absolute top-4 right-4 z-10 transition-transform duration-300 group-hover:scale-110">
+                            <span className={`${sourceStyles} backdrop-blur-md text-[10px] font-black uppercase tracking-[0.1em] px-3 py-1.5 rounded-full shadow-lg border border-white/10`}>
+                                {news.source === 'GEMINI_SEARCH' ? 'GEMINI' : news.source}
                             </span>
                         </div>
                     )}

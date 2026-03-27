@@ -2,11 +2,15 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 class AIWriterService {
     constructor() {
-        this.apiKeys = process.env.GEMINI_API_KEYS ? process.env.GEMINI_API_KEYS.split(',') : [];
+        // Robust check: Support both plural (keys) and singular (key) env names
+        const rawKeys = process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY;
+        this.apiKeys = rawKeys ? rawKeys.split(',').map(k => k.trim()) : [];
         this.currentIndex = 0;
         
         if (this.apiKeys.length === 0) {
-            console.warn("WARNING: GEMINI_API_KEYS is missing. AI Writer will fail.");
+            console.warn("WARNING: GEMINI_API_KEYS or GEMINI_API_KEY is missing. AI Writer will fail.");
+        } else {
+            console.log(`AI Writer initialized with ${this.apiKeys.length} API keys.`);
         }
     }
 

@@ -78,6 +78,7 @@ model News {
   summary            String
   content            String
   sourceLink         String?
+  source             String    @default("MANUAL")
   tags               String[]
   seoMetaTitle       String?
   seoMetaDescription String?
