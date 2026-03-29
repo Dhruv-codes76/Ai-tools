@@ -105,25 +105,25 @@ export default function NewsCard({ news }: { news: NewsItem }) {
                 {/* Content Container */}
                 <div className="flex flex-col flex-grow p-6 lg:p-8">
                     <div className="flex justify-between items-center mb-4">
-                        <time className="text-xs tracking-widest text-muted-foreground uppercase font-medium">
+                        <time className="text-xs tracking-widest text-gray-400 uppercase font-medium">
                             {date} • {readingTime}
                         </time>
                     </div>
 
-                    <h3 className="font-sans text-xl lg:text-2xl font-bold text-foreground dark:text-white leading-snug mb-4 group-hover:text-blue-500 transition-colors line-clamp-2">
+                    <h3 className="font-sans text-xl lg:text-2xl font-bold text-white leading-snug mb-4 group-hover:text-blue-500 transition-colors line-clamp-2">
                         {news.title}
                     </h3>
 
-                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3 mt-auto mb-6">
+                    <p className="text-gray-300 text-sm leading-relaxed line-clamp-3 mt-auto mb-6">
                         {news.summary}
                     </p>
 
                     {/* Minimal Action Bar */}
-                    <div className="mt-auto flex justify-between items-center relative z-20 pt-4 border-t border-border/30">
+                    <div className="mt-auto flex justify-between items-center relative z-20 pt-4 border-t border-white/10">
                         <div className="flex items-center space-x-1 -ml-2">
                             <button
                                 onClick={handleSave}
-                                className={`p-2 rounded-full transition-all duration-200 hover:bg-muted/80 ${isSaved ? 'text-blue-500' : 'text-muted-foreground hover:text-foreground'}`}
+                                className={`p-2 rounded-full transition-all duration-200 hover:bg-white/10 ${isSaved ? 'text-blue-500' : 'text-gray-400 hover:text-white'}`}
                                 aria-label="Save article"
                             >
                                 <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
@@ -131,7 +131,7 @@ export default function NewsCard({ news }: { news: NewsItem }) {
 
                             <button
                                 onClick={handleShareClick}
-                                className="p-2 rounded-full text-muted-foreground transition-all duration-200 hover:bg-muted/80 hover:text-foreground"
+                                className="p-2 rounded-full text-gray-400 transition-all duration-200 hover:bg-white/10 hover:text-white"
                                 aria-label="Share article"
                             >
                                 <Share2 className="w-4 h-4" />
